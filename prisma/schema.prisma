@@ -1,0 +1,156 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Billboard {
+  id  String @id @default(uuid())
+  url String @unique @db.VarChar(255)
+
+  category Category?
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("billboards")
+}
+
+model Category {
+  id   String @id @default(uuid())
+  name String @unique @db.VarChar(255)
+
+  products CategoryProduct[]
+
+  billboard   Billboard @relation(fields: [billboardId], references: [id])
+  billboardId String    @unique
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("categories")
+}
+
+enum Size {
+  Small
+  Medium
+  Large
+}
+
+model Product {
+  id          String @id @default(uuid())
+  name        String
+  thumbnail   String
+  rangePrice  String @db.VarChar(255)
+  description String @db.Text
+  guide       String @db.Text
+
+  images     Image[]
+  options    Option[]
+  categories CategoryProduct[]
+
+  tag Tag?
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("products")
+}
+
+model Tag {
+  id   String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  product   Product @relation(fields: [productId], references: [id])
+  productId String  @unique
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("tags")
+}
+
+model Image {
+  id  String @id @default(uuid())
+  url String @db.Text
+
+  productId String
+
+  product Product @relation(fields: [productId], references: [id])
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("images")
+}
+
+model Option {
+  id    String  @id @default(uuid())
+  name  String  @db.VarChar(255)
+  sale  Float   @default(0)
+  price Decimal @default(0)
+  size  Size?   @default(Small)
+
+  Colors  Color[]
+  Planter Planter[]
+
+  productId String
+
+  product Product @relation(fields: [productId], references: [id])
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("options")
+}
+
+model Color {
+  id   String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  optionId String
+  option   Option @relation(fields: [optionId], references: [id])
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("colors")
+}
+
+model Planter {
+  id   String @id @default(uuid())
+  name String @db.VarChar(255)
+
+  optionId String
+  option   Option @relation(fields: [optionId], references: [id])
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("planters")
+}
+
+model CategoryProduct {
+  id         Int    @id @default(autoincrement())
+  categoryId String
+  productId  String
+
+  category Category @relation(fields: [categoryId], references: [id])
+
+  product Product @relation(fields: [productId], references: [id])
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@unique([categoryId, productId])
+  @@map("product_categpory")
+}
