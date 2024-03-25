@@ -17,7 +17,8 @@ model Billboard {
   id  String @id @default(uuid())
   url String @unique @db.VarChar(255)
 
-  category Category?
+  category   Category @relation(fields: [categoryId], references: [id])
+  categoryId String   @unique
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -29,10 +30,8 @@ model Category {
   id   String @id @default(uuid())
   name String @unique @db.VarChar(255)
 
-  products CategoryProduct[]
-
-  billboard   Billboard @relation(fields: [billboardId], references: [id])
-  billboardId String    @unique
+  billboard Billboard?
+  products  CategoryProduct[]
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
