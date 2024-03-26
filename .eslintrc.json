@@ -27,8 +27,5 @@
     }
   },
   "rules": {
-    "import/no-unresolved": "error",
-    "import/no-unused-modules": "warn",
-    "no-unused-vars": "warn"
   }
 }

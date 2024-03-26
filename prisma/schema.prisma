@@ -14,8 +14,11 @@ datasource db {
 }
 
 model Billboard {
-  id  String @id @default(uuid())
-  url String @unique @db.VarChar(255)
+  id          String @id @default(uuid())
+  name        String
+  description String
+  url         String @unique @db.VarChar(255)
+  publicUrlId String
 
   category   Category @relation(fields: [categoryId], references: [id])
   categoryId String   @unique

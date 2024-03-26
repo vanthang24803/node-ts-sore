@@ -1,16 +1,18 @@
-function responseStatus(status: number, message?: string | object) {
+import { Status } from "../enum/status";
+
+function responseStatus(status: Status, message?: string | object) {
   let isSuccess: boolean;
 
   switch (status) {
-    case 200:
+    case Status.Success:
       isSuccess = true;
       break;
-    case 400:
-    case 404:
+    case Status.BadRequest:
+    case Status.NotFound:
       isSuccess = false;
       message = `${message} not found`;
       break;
-    case 500:
+    case Status.ServerError:
       isSuccess = false;
       message = "Server is error";
       break;
