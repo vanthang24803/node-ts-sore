@@ -49,12 +49,12 @@ enum Size {
 }
 
 model Product {
-  id          String @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   thumbnail   String
-  rangePrice  String @db.VarChar(255)
-  description String @db.Text
-  guide       String @db.Text
+  rangePrice  String  @db.VarChar(255)
+  description String  @db.Text
+  guide       String  @db.Text
   publiced    Boolean @default(false)
 
   images     Image[]
@@ -97,13 +97,12 @@ model Image {
 }
 
 model Option {
-  id    String  @id @default(uuid())
-  name  String  @db.VarChar(255)
-  sale  Float   @default(0)
-  price Float @default(0)
-  size  Size?   @default(Small)
+  id    String @id @default(uuid())
+  name  String @db.VarChar(255)
+  sale  Float  @default(0)
+  price Float  @default(0)
+  size  Size?  @default(Small)
 
-  Colors  Color[]
   Planter Planter[]
 
   productId String
@@ -119,9 +118,10 @@ model Option {
 model Color {
   id   String @id @default(uuid())
   name String @db.VarChar(255)
+  value String @db.VarChar(12)
 
-  optionId String
-  option   Option @relation(fields: [optionId], references: [id])
+  planterId String
+  planter   Planter @relation(fields: [planterId], references: [id])
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -134,7 +134,8 @@ model Planter {
   name String @db.VarChar(255)
 
   optionId String
-  option   Option @relation(fields: [optionId], references: [id])
+  option   Option  @relation(fields: [optionId], references: [id])
+  colors   Color[]
 
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -143,15 +144,15 @@ model Planter {
 }
 
 model CategoryProduct {
-  id         Int     @id @default(autoincrement())
+  id         Int    @id @default(autoincrement())
   categoryId String
   productId  String
 
-  category   Category @relation(fields: [categoryId], references: [id])
-  product    Product  @relation(fields: [productId], references: [id])
+  category Category @relation(fields: [categoryId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
 
-  createAt   DateTime @default(now())
-  updateAt   DateTime @updatedAt
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
 
   @@unique([categoryId, productId])
   @@map("product_category") // Fix the typo here

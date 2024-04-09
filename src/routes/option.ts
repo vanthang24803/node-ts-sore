@@ -5,6 +5,7 @@ import {
   createOption,
   deleteOption,
   findAllOption,
+  findDetailOption,
   updateOption,
 } from "../controllers/option";
 
@@ -17,6 +18,7 @@ router.put(
   updateOption
 );
 router.get("/:id/options", findAllOption);
+router.get("/:productId/options/:id", findDetailOption);
 router.delete("/:productId/options/:id", deleteOption);
 
 export default router;

@@ -74,10 +74,10 @@ export const updateOption = async (req: Request, res: Response) => {
       },
     });
 
-    res.status(200).json(responseStatus(Status.Success, result));
+    return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
     console.error(error);
-    res.status(500).json(responseStatus(Status.ServerError));
+    return res.status(500).json(responseStatus(Status.ServerError));
   }
 };
 
@@ -96,10 +96,41 @@ export const findAllOption = async (req: Request, res: Response) => {
     }
 
     const result = await prisma.option.findMany();
-    res.status(200).json(responseStatus(Status.Success, result));
+    return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
     console.error(error);
-    res.status(500).json(responseStatus(Status.ServerError));
+    return res.status(500).json(responseStatus(Status.ServerError));
+  }
+};
+
+export const findDetailOption = async (req: Request, res: Response) => {
+  try {
+    const { productId, id } = req.params;
+
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+    }
+
+    const result = await prisma.option.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    if (result) {
+      return res.status(200).json(responseStatus(Status.Success, result));
+    }
+
+    return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json(responseStatus(Status.ServerError));
   }
 };
 
@@ -133,11 +164,11 @@ export const deleteOption = async (req: Request, res: Response) => {
       },
     });
 
-    res
+    return res
       .status(200)
       .json(responseStatus(Status.Success, "Option deleted successful"));
   } catch (error) {
     console.error(error);
-    res.status(500).json(responseStatus(Status.ServerError));
+    return res.status(500).json(responseStatus(Status.ServerError));
   }
 };
