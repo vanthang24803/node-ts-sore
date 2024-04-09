@@ -2,12 +2,14 @@ FROM node:latest-alpine
 
 WORKDIR /app
 
+RUN npm -g install pnpm
+
 COPY package*.json ./
 
-RUN npm install
+RUN pnpm install
 
 COPY  . .
 
 EXPOSE 8080
 
-CMD [ "npm", "run" , "dev" ]
+CMD [ "pnpm", "start" ]

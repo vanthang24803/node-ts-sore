@@ -8,6 +8,9 @@ function responseStatus(status: Status, message?: string | object) {
       isSuccess = true;
       break;
     case Status.BadRequest:
+    case Status.Created:
+      isSuccess = true;
+      break;
     case Status.NotFound:
       isSuccess = false;
       message = `${message} not found`;

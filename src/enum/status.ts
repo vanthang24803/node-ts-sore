@@ -3,5 +3,6 @@ export enum Status {
   BadRequest,
   NotFound,
   ServerError,
+  Created
 }
 
