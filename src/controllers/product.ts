@@ -11,6 +11,7 @@ import {
   isProductExist,
   updateProductAsync,
 } from "../services/product";
+import { prisma } from "../lib/prisma";
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
@@ -34,7 +35,50 @@ export const createProduct = async (req: Request, res: Response) => {
 
 export const findAllProduct = async (req: Request, res: Response) => {
   try {
-    const result = await findAllProductAsync();
+    const { name, category } = req.query;
+
+    if (!name && !category) {
+      const result = await findAllProductAsync();
+
+      return res.status(200).json(responseStatus(Status.Success, result));
+    }
+
+    const result = await prisma.product.findMany({
+      where: {
+        name: {
+          contains: name as string,
+          mode: "insensitive",
+        },
+        categories: {
+          every: {
+            category: {
+              name: {
+                equals: category as string,
+                mode: "insensitive",
+              },
+            },
+          },
+        },
+      },
+      include: {
+        options: {
+          select: {
+            id: true,
+            name: true,
+            sale: true,
+            price: true,
+            size: true,
+            createAt: true,
+            updateAt: true,
+          },
+        },
+      },
+    });
+
+    if (result.length === 0) {
+      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+    }
+
     res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
     res.status(500).json(responseStatus(Status.BadRequest));

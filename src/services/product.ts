@@ -40,7 +40,21 @@ export const createProductAsync = async (
 };
 
 export const findAllProductAsync = async () => {
-  const products = await prisma.product.findMany();
+  const products = await prisma.product.findMany({
+    include: {
+      options: {
+        select : {
+          id: true,
+          name: true,
+          sale: true,
+          price: true,
+          size: true,
+          createAt: true,
+          updateAt: true,
+        }
+      },
+    },
+  });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   return products.map(({ description, guide, ...rest }) => rest);
 };

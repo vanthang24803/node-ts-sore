@@ -55,6 +55,7 @@ model Product {
   rangePrice  String @db.VarChar(255)
   description String @db.Text
   guide       String @db.Text
+  publiced    Boolean @default(false)
 
   images     Image[]
   options    Option[]
@@ -99,7 +100,7 @@ model Option {
   id    String  @id @default(uuid())
   name  String  @db.VarChar(255)
   sale  Float   @default(0)
-  price Decimal @default(0)
+  price Float @default(0)
   size  Size?   @default(Small)
 
   Colors  Color[]
@@ -142,17 +143,16 @@ model Planter {
 }
 
 model CategoryProduct {
-  id         Int    @id @default(autoincrement())
+  id         Int     @id @default(autoincrement())
   categoryId String
   productId  String
 
-  category Category @relation(fields: [categoryId], references: [id])
+  category   Category @relation(fields: [categoryId], references: [id])
+  product    Product  @relation(fields: [productId], references: [id])
 
-  product Product @relation(fields: [productId], references: [id])
-
-  createAt DateTime @default(now())
-  updateAt DateTime @updatedAt
+  createAt   DateTime @default(now())
+  updateAt   DateTime @updatedAt
 
   @@unique([categoryId, productId])
-  @@map("product_categpory")
+  @@map("product_category") // Fix the typo here
 }
