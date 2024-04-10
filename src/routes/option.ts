@@ -11,14 +11,14 @@ import {
 
 const router: Router = express.Router();
 
-router.post("/:id/options", validateMiddleware(OptionSchema), createOption);
+router.post("/products/:id/options", validateMiddleware(OptionSchema), createOption);
 router.put(
   "/:productId/options/:id",
   validateMiddleware(OptionSchema),
   updateOption
 );
-router.get("/:id/options", findAllOption);
-router.get("/:productId/options/:id", findDetailOption);
-router.delete("/:productId/options/:id", deleteOption);
+router.get("/products/:id/options", findAllOption);
+router.get("/products/:productId/options/:id", findDetailOption);
+router.delete("/products/:productId/options/:id", deleteOption);
 
 export default router;

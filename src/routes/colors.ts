@@ -11,16 +11,16 @@ import {
 const router: Router = express.Router();
 
 router.post(
-  "/:productId/options/:optionId/color",
+  "/products/:productId/options/:optionId/color",
   validateMiddleware(ColorSchema),
   createColor
 );
-router.get("/:productId/options/:optionId/color", findColor);
+router.get("/products/:productId/options/:optionId/color", findColor);
 router.put(
-  "/:productId/options/:optionId/color",
+  "/products/:productId/options/:optionId/color",
   validateMiddleware(ColorSchema),
   updateColor
 );
-router.delete("/:productId/options/:optionId/color", deleteColor);
+router.delete("/products/:productId/options/:optionId/color", deleteColor);
 
 export default router;

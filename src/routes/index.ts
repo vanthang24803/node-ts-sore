@@ -5,14 +5,16 @@ import productRoute from "./product";
 import optionRoute from "./option";
 import planterRoute from "./planter";
 import colorRouter from "./colors";
+import tagRouter from "./tag";
 
 const router: Router = express.Router();
 
 router.use("/categories", categoryRoute);
 router.use("/billboards", billboardRoute);
 router.use("/products", productRoute);
-router.use("/products", optionRoute);
-router.use("/products", planterRoute);
-router.use("/products", colorRouter);
+router.use(optionRoute);
+router.use(planterRoute);
+router.use(colorRouter);
+router.use(tagRouter);
 
 export default router;

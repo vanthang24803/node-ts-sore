@@ -6,10 +6,10 @@ import { createPlanter, deletePlanter, findPlanters, updatePlanter } from "../co
 
 const router: Router = express.Router();
 
-router.post("/:productId/options/:id/planter", validateMiddleware(PlanterSchema), createPlanter);
-router.get("/:productId/options/:optionId/planter", findPlanters);
-router.put("/:productId/options/:optionId/planter", validateMiddleware(PlanterSchema), updatePlanter);
-router.delete("/:productId/options/:optionId/planter",deletePlanter);
+router.post("/products/:productId/options/:id/planter", validateMiddleware(PlanterSchema), createPlanter);
+router.get("/products/:productId/options/:optionId/planter", findPlanters);
+router.put("/products/:productId/options/:optionId/planter", validateMiddleware(PlanterSchema), updatePlanter);
+router.delete("/products/:productId/options/:optionId/planter",deletePlanter);
 
 
 export default router;

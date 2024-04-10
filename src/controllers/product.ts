@@ -26,10 +26,10 @@ export const createProduct = async (req: Request, res: Response) => {
 
     const result = await createProductAsync(images, data);
 
-    res.status(200).json(responseStatus(Status.Success, result));
+    return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
-    res.status(500).json(responseStatus(Status.BadRequest));
-    throw error;
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.BadRequest));
   }
 };
 
@@ -79,10 +79,10 @@ export const findAllProduct = async (req: Request, res: Response) => {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    res.status(200).json(responseStatus(Status.Success, result));
+    return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
-    res.status(500).json(responseStatus(Status.BadRequest));
-    throw error;
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.BadRequest));
   }
 };
 
@@ -93,13 +93,13 @@ export const findDetailProduct = async (req: Request, res: Response) => {
     const result = await findDetailProductAsync(id);
 
     if (result) {
-      res.status(200).json(responseStatus(Status.Success, result));
+      return res.status(200).json(responseStatus(Status.Success, result));
     }
 
     return res.status(404).json(responseStatus(Status.NotFound, "Product"));
   } catch (error) {
-    res.status(500).json(responseStatus(Status.BadRequest));
-    throw error;
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.BadRequest));
   }
 };
 
@@ -116,10 +116,10 @@ export const updateProduct = async (req: Request, res: Response) => {
 
     const result = await updateProductAsync(id, body);
 
-    res.status(200).json(responseStatus(Status.Success, result));
+    return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
-    res.status(500).json(responseStatus(Status.BadRequest));
-    throw error;
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.BadRequest));
   }
 };
 
@@ -135,11 +135,11 @@ export const deleteProduct = async (req: Request, res: Response) => {
 
     await deleteProductAsync(id);
 
-    res
+    return res
       .status(200)
       .json(responseStatus(Status.Success, "Product deleted success"));
   } catch (error) {
-    res.status(500).json(responseStatus(Status.BadRequest));
-    throw error;
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.BadRequest));
   }
 };
