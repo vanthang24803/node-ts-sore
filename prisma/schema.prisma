@@ -13,6 +13,64 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+enum Size {
+  Small
+  Medium
+  Large
+}
+
+enum Role {
+  Admin
+  Manager
+  User
+}
+
+model User {
+  id          String    @id @default(uuid())
+  email       String    @unique @db.VarChar(255)
+  password    String
+  avatar      String?
+  verifyEmail Boolean   @default(false)
+  firstName   String    @db.VarChar(50)
+  lastName    String    @db.VarChar(50)
+  phone       String?    @db.VarChar(10)
+  role        Role      @default(User)
+  tokens      Token[]
+  addresses   Address[]
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("user")
+}
+
+model Address {
+  id   String @id @default(uuid())
+  name String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("address")
+}
+
+model Token {
+  id    String @id @default(uuid())
+  name  String @db.VarChar(255)
+  value String @unique
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  expiryDate DateTime
+  createAt   DateTime @default(now())
+
+  @@map("token")
+}
+
 model Billboard {
   id          String @id @default(uuid())
   name        String
@@ -40,12 +98,6 @@ model Category {
   updateAt DateTime @updatedAt
 
   @@map("categories")
-}
-
-enum Size {
-  Small
-  Medium
-  Large
 }
 
 model Product {
@@ -83,7 +135,7 @@ model Tag {
 }
 
 model Image {
-  id  String @id 
+  id  String @id
   url String @db.Text
 
   productId String
@@ -116,8 +168,8 @@ model Option {
 }
 
 model Color {
-  id   String @id @default(uuid())
-  name String @db.VarChar(255)
+  id    String @id @default(uuid())
+  name  String @db.VarChar(255)
   value String @db.VarChar(12)
 
   planterId String

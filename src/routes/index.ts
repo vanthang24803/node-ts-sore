@@ -7,9 +7,11 @@ import planterRoute from "./planter";
 import colorRouter from "./colors";
 import tagRouter from "./tag";
 import mediaRouter from "./media";
+import authRouter from "./auth";
 
 const router: Router = express.Router();
 
+router.use("/auth", authRouter);
 router.use("/categories", categoryRoute);
 router.use("/billboards", billboardRoute);
 router.use("/products", productRoute);
