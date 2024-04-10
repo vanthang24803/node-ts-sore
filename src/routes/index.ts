@@ -6,6 +6,7 @@ import optionRoute from "./option";
 import planterRoute from "./planter";
 import colorRouter from "./colors";
 import tagRouter from "./tag";
+import mediaRouter from "./media";
 
 const router: Router = express.Router();
 
@@ -16,5 +17,6 @@ router.use(optionRoute);
 router.use(planterRoute);
 router.use(colorRouter);
 router.use(tagRouter);
+router.use(mediaRouter);
 
 export default router;

@@ -83,7 +83,7 @@ model Tag {
 }
 
 model Image {
-  id  String @id @default(uuid())
+  id  String @id 
   url String @db.Text
 
   productId String

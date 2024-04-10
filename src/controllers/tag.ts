@@ -129,3 +129,39 @@ export const updateTag = async (req: Request, res: Response) => {
     return res.status(500).json(responseStatus(Status.BadRequest));
   }
 };
+
+export const detailTag = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params;
+    const existingProduct = await prisma.product.findUnique({
+      where: {
+        id: productId,
+      },
+    });
+
+    if (!existingProduct) {
+      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+    }
+
+    const { method, id } = req.query;
+
+    if (method === "detail" && id) {
+      const existingTag = await prisma.tag.findUnique({
+        where: { id: id as string },
+      });
+
+      if (!existingTag) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
+      }
+
+      return res.status(200).json(responseStatus(Status.Success, existingTag));
+    }
+
+    return res
+      .status(400)
+      .json(responseStatus(Status.BadRequest, "Invalid Params"));
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.BadRequest));
+  }
+};
