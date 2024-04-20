@@ -72,6 +72,7 @@ export const findAllProduct = async (req: Request, res: Response) => {
             updateAt: true,
           },
         },
+        tag: true,
       },
     });
 

@@ -4,7 +4,7 @@ import { Status } from "../enum/status";
 import { prisma } from "../lib/prisma";
 import bcrypt from "bcrypt";
 import { RegisterResponse } from "../models/auth";
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import "dotenv/config";
 
 const secret = process.env.SECRET;
@@ -56,15 +56,13 @@ export const login = async (req: Request, res: Response) => {
         .json(responseStatus(Status.BadRequest, "Email or password wrong"));
     }
 
-    const user = {
-      id: exitingUser.id,
-      name: `${exitingUser.firstName} ${exitingUser.lastName}`,
-      role: exitingUser.role,
-    };
+    const accessToken = jwt.sign({ id: exitingUser.id }, secret!, {
+      expiresIn: "5m",
+    });
 
-    const accessToken = jwt.sign(user, secret!, { expiresIn: "1m" });
-
-    const refreshToken = jwt.sign(user, refresh!, { expiresIn: "30d" });
+    const refreshToken = jwt.sign({ id: exitingUser.id }, refresh!, {
+      expiresIn: "30d",
+    });
 
     const exitingToken = await prisma.token.findFirst({
       where: {
@@ -85,8 +83,8 @@ export const login = async (req: Request, res: Response) => {
       });
 
       return res.status(200).json({
-        accessToken,
-        refreshToken,
+        access: accessToken,
+        refresh: refreshToken,
       });
     }
 
@@ -155,7 +153,7 @@ export const refreshToken = async (req: Request, res: Response) => {
 
     try {
       jwt.verify(refreshToken, refresh!);
-      const accessToken = jwt.sign(user, secret!, { expiresIn: "1m" });
+      const accessToken = jwt.sign(user, secret!, { expiresIn: "5m" });
 
       return res.status(200).json({
         accessToken,
@@ -163,6 +161,45 @@ export const refreshToken = async (req: Request, res: Response) => {
       });
     } catch (error) {
       console.log(error);
+    }
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json(responseStatus(Status.ServerError));
+  }
+};
+
+export const profile = async (req: Request, res: Response) => {
+  try {
+    const header = req.headers["authorization"];
+    const token = header && header.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+    try {
+      const decoded = jwt.verify(token, secret!) as JwtPayload;
+
+      const user = await prisma.user.findUnique({
+        where: {
+          id: decoded?.id,
+        },
+      });
+
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { password, ...response } = user!;
+
+      if (user) {
+        return res.status(200).json(response);
+      }
+
+      return res.send(401).json({ message: "Unauthorized" });
+    } catch (error) {
+      console.log(error);
+      return res.status(403).json({
+        message: "Forbidden",
+      });
     }
   } catch (error) {
     console.log(error);

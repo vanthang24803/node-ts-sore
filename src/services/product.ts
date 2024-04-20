@@ -43,7 +43,7 @@ export const findAllProductAsync = async () => {
   const products = await prisma.product.findMany({
     include: {
       options: {
-        select : {
+        select: {
           id: true,
           name: true,
           sale: true,
@@ -51,8 +51,9 @@ export const findAllProductAsync = async () => {
           size: true,
           createAt: true,
           updateAt: true,
-        }
+        },
       },
+      tag: true,
     },
   });
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
