@@ -1,19 +1,16 @@
 import { Request, Response } from "express";
 import responseStatus from "../helpers/response";
 import { Status } from "../enum/status";
-import { prisma } from "../lib/prisma";
-import UploadService from "../services/upload";
+import ProductService from "../services/product";
+import MediaService from "../services/media";
 
-const uploadService = new UploadService();
+const productService = new ProductService();
+const mediaService = new MediaService();
 
 export const createImages = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -23,22 +20,10 @@ export const createImages = async (req: Request, res: Response) => {
 
     if (method === "create") {
       const images = req.files as Express.Multer.File[] | undefined;
-      const imageUploads = await uploadService.upload(images);
-      const createdImages = [];
 
-      for (const image of imageUploads) {
-        const result = await prisma.image.create({
-          data: {
-            id: image.publicId,
-            url: image.url,
-            productId,
-          },
-        });
-        createdImages.push(result);
-      }
-      return res
-        .status(201)
-        .json(responseStatus(Status.Created, createdImages));
+      const result = await mediaService.create(productId, images);
+
+      return res.status(200).json(result);
     }
 
     return res
@@ -53,11 +38,7 @@ export const createImages = async (req: Request, res: Response) => {
 export const deletedImages = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -66,25 +47,13 @@ export const deletedImages = async (req: Request, res: Response) => {
     const { method, id } = req.query;
 
     if (method === "delete" && id) {
-      const exitingMedia = await prisma.image.findUnique({
-        where: {
-          id: id as string,
-        },
-      });
-      if (exitingMedia) {
-        await uploadService.delete(exitingMedia.id);
+      const result = await mediaService.delete(id as string);
 
-        await prisma.image.delete({
-          where: {
-            id: id as string,
-          },
-        });
-
-        return res
-          .status(200)
-          .json(responseStatus(Status.Success, "Image deleted success"));
+      if (result.isSuccess) {
+        return res.status(200).json(result);
       }
-      return res.status(404).json(responseStatus(Status.NotFound, "Image"));
+
+      return res.status(400).json(result);
     }
 
     return res
@@ -99,11 +68,8 @@ export const deletedImages = async (req: Request, res: Response) => {
 export const findAllImages = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -112,15 +78,9 @@ export const findAllImages = async (req: Request, res: Response) => {
     const { method } = req.query;
 
     if (method === "all") {
-      const result = await prisma.image.findMany({
-        where: {
-          productId,
-        },
-      });
+      const result = await mediaService.findAll(productId);
 
-      return res
-        .status(200)
-        .json(responseStatus(Status.Success, result));
+      return res.status(200).json(responseStatus(Status.Success, result));
     }
 
     return res

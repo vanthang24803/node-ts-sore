@@ -1,33 +1,23 @@
 import { Request, Response } from "express";
 import responseStatus from "../helpers/response";
 import { Status } from "../enum/status";
-import { prisma } from "../lib/prisma";
+import ProductService from "../services/product";
+import OptionService from "../services/option";
+
+const productService = new ProductService();
+const optionService = new OptionService();
 
 export const createOption = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id,
-      },
-    });
+    const existingProduct = await productService.isProductExist(id);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    const { name, price, sale, size } = req.body;
-
-    const result = await prisma.option.create({
-      data: {
-        name,
-        price,
-        sale,
-        size,
-        productId: id,
-      },
-    });
+    const result = await optionService.create(id, req.body);
 
     return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
@@ -40,39 +30,19 @@ export const updateOption = async (req: Request, res: Response) => {
   try {
     const { productId, id } = req.params;
 
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    const existingOption = await prisma.option.findUnique({
-      where: {
-        id,
-      },
-    });
+    const existingOption = await optionService.isExist(productId, id);
 
     if (!existingOption) {
       return res.status(404).json(responseStatus(Status.NotFound, "Option"));
     }
 
-    const { name, price, sale, size } = req.body;
-
-    const result = await prisma.option.update({
-      where: {
-        id,
-      },
-      data: {
-        name,
-        price,
-        sale,
-        size,
-      },
-    });
+    const result = await optionService.update(productId, id, req.body);
 
     return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
@@ -85,17 +55,13 @@ export const findAllOption = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id,
-      },
-    });
+    const existingProduct = await productService.isProductExist(id);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    const result = await prisma.option.findMany();
+    const result = await optionService.findAll(id);
     return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
     console.error(error);
@@ -107,21 +73,13 @@ export const findDetailOption = async (req: Request, res: Response) => {
   try {
     const { productId, id } = req.params;
 
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    const result = await prisma.option.findUnique({
-      where: {
-        id,
-      },
-    });
+    const result = await optionService.findById(productId, id);
 
     if (result) {
       return res.status(200).json(responseStatus(Status.Success, result));
@@ -138,31 +96,19 @@ export const deleteOption = async (req: Request, res: Response) => {
   try {
     const { productId, id } = req.params;
 
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    const existingOption = await prisma.option.findUnique({
-      where: {
-        id,
-      },
-    });
+    const existingOption = await optionService.isExist(productId, id);
 
     if (!existingOption) {
       return res.status(404).json(responseStatus(Status.NotFound, "Option"));
     }
 
-    await prisma.option.delete({
-      where: {
-        id,
-      },
-    });
+    await optionService.delete(productId, id);
 
     return res
       .status(200)

@@ -1,16 +1,17 @@
 import { Request, Response } from "express";
 import responseStatus from "../helpers/response";
 import { Status } from "../enum/status";
-import { prisma } from "../lib/prisma";
+
+import ProductService from "../services/product";
+import TagService from "../services/tag";
+
+const productService = new ProductService();
+const tagService = new TagService();
 
 export const createTag = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -21,12 +22,8 @@ export const createTag = async (req: Request, res: Response) => {
     if (method === "create") {
       const { name } = req.body;
 
-      const result = await prisma.tag.create({
-        data: {
-          name,
-          productId,
-        },
-      });
+      const result = await tagService.create(productId, name);
+
       return res.status(200).json(responseStatus(Status.Success, result));
     }
 
@@ -42,11 +39,7 @@ export const createTag = async (req: Request, res: Response) => {
 export const deleteTag = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -55,19 +48,13 @@ export const deleteTag = async (req: Request, res: Response) => {
     const { method, id } = req.query;
 
     if (method === "delete" && id) {
-      const existingTag = await prisma.tag.findUnique({
-        where: { id: id as string },
-      });
+      const existingTag = await tagService.isExist(productId, id as string);
 
       if (!existingTag) {
         return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
       }
 
-      await prisma.tag.delete({
-        where: {
-          id: id as string,
-        },
-      });
+      await tagService.delete(productId, id as string);
 
       return res
         .status(200)
@@ -86,11 +73,7 @@ export const deleteTag = async (req: Request, res: Response) => {
 export const updateTag = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -99,9 +82,7 @@ export const updateTag = async (req: Request, res: Response) => {
     const { method, id } = req.query;
 
     if (method === "update" && id) {
-      const existingTag = await prisma.tag.findUnique({
-        where: { id: id as string },
-      });
+      const existingTag = await tagService.isExist(productId, id as string);
 
       if (!existingTag) {
         return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
@@ -109,14 +90,7 @@ export const updateTag = async (req: Request, res: Response) => {
 
       const { name } = req.body;
 
-      const result = await prisma.tag.update({
-        where: {
-          id: id as string,
-        },
-        data: {
-          name,
-        },
-      });
+      const result = await tagService.update(productId, id as string, name);
 
       return res.status(200).json(responseStatus(Status.Success, result));
     }
@@ -133,11 +107,7 @@ export const updateTag = async (req: Request, res: Response) => {
 export const detailTag = async (req: Request, res: Response) => {
   try {
     const { productId } = req.params;
-    const existingProduct = await prisma.product.findUnique({
-      where: {
-        id: productId,
-      },
-    });
+    const existingProduct = await productService.isProductExist(productId);
 
     if (!existingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
@@ -146,15 +116,13 @@ export const detailTag = async (req: Request, res: Response) => {
     const { method, id } = req.query;
 
     if (method === "detail" && id) {
-      const existingTag = await prisma.tag.findUnique({
-        where: { id: id as string },
-      });
+      const result = await tagService.findById(id as string);
 
-      if (!existingTag) {
+      if (!result) {
         return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
       }
 
-      return res.status(200).json(responseStatus(Status.Success, existingTag));
+      return res.status(200).json(responseStatus(Status.Success, result));
     }
 
     return res
