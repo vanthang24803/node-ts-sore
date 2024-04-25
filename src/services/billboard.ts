@@ -1,74 +1,86 @@
 import { prisma } from "../lib/prisma";
 import { Billboard } from "../models/billboard";
-import { deletePhotoService, uploadService } from "./upload";
+import IBillboardService from "../repositories/billboard";
+import UploadService from "./upload";
 
-export const createBillboardAsync = async (
-  images: Express.Multer.File[] | undefined,
-  data: Billboard
-) => {
-  const imageUpload = await uploadService(images);
+const uploadService = new UploadService();
 
-  const newBillboard = await prisma.billboard.create({
-    data: {
-      name: data.name,
-      description: data.description,
-      publicUrlId: imageUpload[0].publicId,
-      url: imageUpload[0].url,
-      categoryId: data.categoryId,
-    },
-  });
+class BillboardService implements IBillboardService {
+  async createBillboardAsync(
+    images: Express.Multer.File[] | undefined,
+    data: Billboard
+  ) {
+    {
+      const imageUpload = await uploadService.upload(images);
 
-  return newBillboard;
-};
+      const newBillboard = await prisma.billboard.create({
+        data: {
+          name: data.name,
+          description: data.description,
+          publicUrlId: imageUpload[0].publicId,
+          url: imageUpload[0].url,
+          categoryId: data.categoryId,
+        },
+      });
 
-export const findAllBillboardAsync = async () => {
-  return await prisma.billboard.findMany();
-};
+      return newBillboard;
+    }
+  }
 
-export const isBillboardExistAsync = async (id: string) => {
-  return Boolean(
-    await prisma.billboard.findUnique({
+  async findAllBillboardAsync() {
+    return await prisma.billboard.findMany();
+  }
+
+  async isBillboardExistAsync(id: string) {
+    return Boolean(
+      await prisma.billboard.findUnique({
+        where: {
+          id,
+        },
+      })
+    );
+  }
+
+  async findBillboardDetailAsync(id: string) {
+    return await prisma.billboard.findFirst({
       where: {
         id,
       },
-    })
-  );
-};
+    });
+  }
 
-export const findBillboardDetailAsync = async (id: string) => {
-  return await prisma.billboard.findFirst({
-    where: {
-      id,
-    },
-  });
-};
+  async updateBillboardAsync(id: string, data: Billboard) {
+    const updateBillboard = await prisma.billboard.update({
+      where: {
+        id,
+      },
+      data: {
+        name: data.name,
+        description: data.description,
+      },
+    });
 
-export const updateBillboardAsync = async (id: string, data: Billboard) => {
-  const updateBillboard = await prisma.billboard.update({
-    where: {
-      id,
-    },
-    data: {
-      name: data.name,
-      description: data.description,
-    },
-  });
+    return updateBillboard;
+  }
 
-  return updateBillboard;
-};
+  async deleteBillboardAsync(id: string) {
+    const exitingBillboard = await prisma.billboard.findUnique({
+      where: { id },
+    });
 
-export const deleteBillboardAsync = async (id: string) => {
-  const exitingBillboard = await prisma.billboard.findUnique({ where: { id } });
+    if (exitingBillboard) {
+      const result = await uploadService.delete(exitingBillboard.publicUrlId);
 
-  if (exitingBillboard) {
-    const result = await deletePhotoService(exitingBillboard.publicUrlId);
-
-    if (result) {
-      await prisma.billboard.delete({
-        where: {
-          id: exitingBillboard.id,
-        },
-      });
+      if (result) {
+        await prisma.billboard.delete({
+          where: {
+            id: exitingBillboard.id,
+          },
+        });
+      }
     }
   }
-};
+}
+
+export default BillboardService;
+

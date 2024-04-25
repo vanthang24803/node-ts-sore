@@ -1,27 +1,34 @@
 import cloudinary from "../configs/cloudinary";
+import IUploadService from "../repositories/upload";
 
-export const uploadService = async (
-  files: Express.Multer.File[] | undefined
-) => {
-  const images: string[] | undefined = files?.map(
-    (file: Express.Multer.File) => file.path
-  );
+// export const uploadService = async (
+//   files: Express.Multer.File[] | undefined
+// ) =>
 
-  const uploadImages = [];
+class UploadService implements IUploadService {
+  async upload(files: Express.Multer.File[] | undefined) {
+    const images: string[] | undefined = files?.map(
+      (file: Express.Multer.File) => file.path
+    );
 
-  for (const image of images ?? []) {
-    const result = await cloudinary.uploader.upload(image);
-    uploadImages.push({
-      url: result.secure_url,
-      publicId: result.public_id,
-    });
+    const uploadImages = [];
+
+    for (const image of images ?? []) {
+      const result = await cloudinary.uploader.upload(image);
+      uploadImages.push({
+        url: result.secure_url,
+        publicId: result.public_id,
+      });
+    }
+
+    return uploadImages;
   }
 
-  return uploadImages;
-};
+  async delete(publicId: string) {
+    const result = await cloudinary.uploader.destroy(publicId);
 
-export const deletePhotoService = async (publicId: string) => {
-  const result = await cloudinary.uploader.destroy(publicId);
+    return result.result === "ok";
+  }
+}
 
-  return result.result === "ok";
-};
+export default UploadService;

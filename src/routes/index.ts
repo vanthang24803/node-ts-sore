@@ -15,10 +15,6 @@ router.use("/auth", authRouter);
 router.use("/categories", categoryRoute);
 router.use("/billboards", billboardRoute);
 router.use("/products", productRoute);
-router.use(optionRoute);
-router.use(planterRoute);
-router.use(colorRouter);
-router.use(tagRouter);
-router.use(mediaRouter);
+router.use([optionRoute, planterRoute, colorRouter, tagRouter, mediaRouter]);
 
 export default router;

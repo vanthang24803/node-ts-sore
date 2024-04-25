@@ -1,30 +1,26 @@
 import { Request, Response } from "express";
 import responseStatus from "../helpers/response";
 import { Status } from "../enum/status";
-import { isExist } from "../services/category";
 import { Product, UpdateProduct } from "../models/product";
-import {
-  createProductAsync,
-  deleteProductAsync,
-  findAllProductAsync,
-  findDetailProductAsync,
-  isProductExist,
-  updateProductAsync,
-} from "../services/product";
 import { prisma } from "../lib/prisma";
+import ProductService from "../services/product";
+import CategoryService from "../services/category";
+
+const services = new ProductService();
+const categoryService = new CategoryService();
 
 export const createProduct = async (req: Request, res: Response) => {
   try {
     const data: Product = req.body;
     const images = req.files as Express.Multer.File[] | undefined;
 
-    const exitingCategory = await isExist(data.categoryId);
+    const exitingCategory = await categoryService.isExist(data.categoryId);
 
     if (!exitingCategory) {
       return res.status(404).json(responseStatus(Status.NotFound, "Category"));
     }
 
-    const result = await createProductAsync(images, data);
+    const result = await services.createProductAsync(images, data);
 
     return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
@@ -38,7 +34,7 @@ export const findAllProduct = async (req: Request, res: Response) => {
     const { name, category } = req.query;
 
     if (!name && !category) {
-      const result = await findAllProductAsync();
+      const result = await services.findAllProductAsync();
 
       return res.status(200).json(responseStatus(Status.Success, result));
     }
@@ -91,7 +87,7 @@ export const findDetailProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const result = await findDetailProductAsync(id);
+    const result = await services.findDetailProductAsync(id);
 
     if (result) {
       return res.status(200).json(responseStatus(Status.Success, result));
@@ -109,13 +105,13 @@ export const updateProduct = async (req: Request, res: Response) => {
     const { id } = req.params;
     const body: UpdateProduct = req.body;
 
-    const exitingProduct = await isProductExist(id);
+    const exitingProduct = await services.isProductExist(id);
 
     if (!exitingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    const result = await updateProductAsync(id, body);
+    const result = await services.updateProductAsync(id, body);
 
     return res.status(200).json(responseStatus(Status.Success, result));
   } catch (error) {
@@ -128,13 +124,13 @@ export const deleteProduct = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
-    const exitingProduct = await isProductExist(id);
+    const exitingProduct = await services.isProductExist(id);
 
     if (!exitingProduct) {
       return res.status(404).json(responseStatus(Status.NotFound, "Product"));
     }
 
-    await deleteProductAsync(id);
+    await services.deleteProductAsync(id);
 
     return res
       .status(200)

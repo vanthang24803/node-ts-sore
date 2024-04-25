@@ -2,7 +2,10 @@ import { Request, Response } from "express";
 import responseStatus from "../helpers/response";
 import { Status } from "../enum/status";
 import { prisma } from "../lib/prisma";
-import { deletePhotoService, uploadService } from "../services/upload";
+import UploadService from "../services/upload";
+
+
+const uploadService = new UploadService();
 
 export const createImages = async (req: Request, res: Response) => {
   try {
@@ -21,7 +24,7 @@ export const createImages = async (req: Request, res: Response) => {
 
     if (method === "create") {
       const images = req.files as Express.Multer.File[] | undefined;
-      const imageUploads = await uploadService(images);
+      const imageUploads = await uploadService.upload(images);
       const createdImages = [];
 
       for (const image of imageUploads) {
@@ -70,7 +73,7 @@ export const deletedImages = async (req: Request, res: Response) => {
         },
       });
       if (exitingMedia) {
-        await deletePhotoService(exitingMedia.id);
+        await uploadService.delete(exitingMedia.id);
 
         await prisma.image.delete({
           where: {

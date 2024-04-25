@@ -1,44 +1,49 @@
 import { prisma } from "../lib/prisma";
+import ICategoryService from "../repositories/category";
 
-export const createCategory = async (name: string) => {
-  const newCategory = await prisma.category.create({
-    data: {
-      name,
-    },
-  });
+class CategoryService implements ICategoryService {
+  async createCategory(name: string) {
+    const newCategory = await prisma.category.create({
+      data: {
+        name,
+      },
+    });
 
-  return newCategory;
-};
+    return newCategory;
+  }
 
-export const findAllCategory = async () => {
-  return await prisma.category.findMany();
-};
+  async findAllCategory() {
+    return await prisma.category.findMany();
+  }
 
-export const isExist = async (id: string) => {
-  return Boolean(
-    await prisma.category.findUnique({
+  async isExist(id: string) {
+    return Boolean(
+      await prisma.category.findUnique({
+        where: {
+          id,
+        },
+      })
+    );
+  }
+
+  async updateCategory(id: string, name: string) {
+    const updateCategory = await prisma.category.update({
+      where: { id },
+      data: {
+        name,
+      },
+    });
+
+    return updateCategory;
+  }
+
+  async deleteCategory(id: string) {
+    await prisma.category.delete({
       where: {
         id,
       },
-    })
-  );
-};
+    });
+  }
+}
 
-export const updateCategory = async (id: string, name: string) => {
-  const updateCategory = await prisma.category.update({
-    where: { id },
-    data: {
-      name,
-    },
-  });
-
-  return updateCategory;
-};
-
-export const deleteCategory = async (id: string) => {
-  await prisma.category.delete({
-    where: {
-      id,
-    },
-  });
-};
+export default CategoryService;
