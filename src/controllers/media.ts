@@ -4,7 +4,6 @@ import { Status } from "../enum/status";
 import { prisma } from "../lib/prisma";
 import UploadService from "../services/upload";
 
-
 const uploadService = new UploadService();
 
 export const createImages = async (req: Request, res: Response) => {

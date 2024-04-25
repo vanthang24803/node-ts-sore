@@ -1,10 +1,6 @@
 import cloudinary from "../configs/cloudinary";
 import IUploadService from "../repositories/upload";
 
-// export const uploadService = async (
-//   files: Express.Multer.File[] | undefined
-// ) =>
-
 class UploadService implements IUploadService {
   async upload(files: Express.Multer.File[] | undefined) {
     const images: string[] | undefined = files?.map(
