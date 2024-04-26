@@ -5,14 +5,18 @@ import { Product, UpdateProduct } from "../models/product";
 import IProductService from "../repositories/product";
 import UploadService from "./upload";
 
-const uploadService = new UploadService();
-
 class ProductService implements IProductService {
-  async createProductAsync(
+  private uploadService: UploadService;
+
+  constructor() {
+    this.uploadService = new UploadService();
+  }
+
+  public async createProductAsync(
     images: Express.Multer.File[] | undefined,
     data: Product
   ) {
-    const imageUpload = await uploadService.upload(images);
+    const imageUpload = await this.uploadService.upload(images);
 
     const newProduct = await prisma.product.create({
       data: {
@@ -43,7 +47,7 @@ class ProductService implements IProductService {
     return newProduct;
   }
 
-  async findAllProductAsync() {
+  public async findAllProductAsync() {
     const products = await prisma.product.findMany({
       include: {
         options: {
@@ -64,7 +68,7 @@ class ProductService implements IProductService {
     return products.map(({ description, guide, ...rest }) => rest);
   }
 
-  async isProductExist(id: string) {
+  public async isProductExist(id: string) {
     return Boolean(prisma.product.findUnique({ where: { id } }));
   }
 
@@ -79,7 +83,7 @@ class ProductService implements IProductService {
     });
   }
 
-  async updateProductAsync(id: string, data: UpdateProduct) {
+  public async updateProductAsync(id: string, data: UpdateProduct) {
     const updateProduct = await prisma.product.update({
       where: { id },
       data: {
@@ -93,7 +97,7 @@ class ProductService implements IProductService {
     return updateProduct;
   }
 
-  async deleteProductAsync(id: string): Promise<void> {
+  public async deleteProductAsync(id: string): Promise<void> {
     await prisma.product.delete({ where: { id } });
   }
 }

@@ -8,14 +8,18 @@ import IAuthService from "../repositories/auth";
 import JwtGenerator from "../helpers/jwt-generator";
 import TokenService from "./token";
 
-const secret = process.env.SECRET;
-const refresh = process.env.REFRESH;
-
-const jwtGenerator = new JwtGenerator();
-const tokenService = new TokenService();
-
 class AuthService implements IAuthService {
-  async register(data: Register) {
+  private jwtGenerator: JwtGenerator;
+  private tokenService: TokenService;
+  private secret = process.env.SECRET;
+  private refresh = process.env.REFRESH;
+
+  constructor() {
+    this.jwtGenerator = new JwtGenerator();
+    this.tokenService = new TokenService();
+  }
+
+  public async register(data: Register) {
     const { email, password, firstName, lastName } = data;
 
     const hashPassword = bcrypt.hashSync(password, bcrypt.genSaltSync(10));
@@ -32,7 +36,7 @@ class AuthService implements IAuthService {
     return RegisterResponse.parse(user);
   }
 
-  async login(data: Login) {
+  public async login(data: Login) {
     const { email, password } = data;
 
     const exitingUser = await prisma.user.findFirst({
@@ -57,19 +61,19 @@ class AuthService implements IAuthService {
       };
     }
 
-    const accessToken = jwtGenerator.generateToken(
+    const accessToken = this.jwtGenerator.generateToken(
       { id: exitingUser.id },
-      secret!,
+      this.secret!,
       "5m"
     );
 
-    const refreshToken = jwtGenerator.generateToken(
+    const refreshToken = this.jwtGenerator.generateToken(
       { id: exitingUser.id },
-      refresh!,
+      this.refresh!,
       "30d"
     );
 
-    const token = await tokenService.generateToken(
+    const token = await this.tokenService.generateToken(
       refreshToken,
       exitingUser.id
     );

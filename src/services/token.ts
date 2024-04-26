@@ -3,13 +3,16 @@ import { prisma } from "../lib/prisma";
 import JwtGenerator from "../helpers/jwt-generator";
 import ITokenService from "../repositories/token";
 
-const jwtGenerator = new JwtGenerator();
-
-const secret = process.env.SECRET;
-const refresh = process.env.REFRESH;
-
 class TokenService implements ITokenService {
-  async generateToken(token: string, id: string) {
+  private readonly secret = process.env.SECRET;
+  private readonly refresh = process.env.REFRESH;
+  private jwtGenerator: JwtGenerator;
+
+  constructor() {
+    this.jwtGenerator = new JwtGenerator();
+  }
+
+  public async generateToken(token: string, id: string) {
     const exitingToken = await prisma.token.findFirst({
       where: {
         name: "refreshToken",
@@ -55,7 +58,7 @@ class TokenService implements ITokenService {
     return exitingToken.value;
   }
 
-  async refreshToken(token: string) {
+  public async refreshToken(token: string) {
     const existingToken = await prisma.token.findFirst({
       where: {
         value: token,
@@ -79,8 +82,8 @@ class TokenService implements ITokenService {
       id: exitingUser?.id,
     };
 
-    jwtGenerator.verifyToken(token, refresh!);
-    const accessToken = jwtGenerator.generateToken(user, secret!, "5m");
+    this.jwtGenerator.verifyToken(token, this.refresh!);
+    const accessToken = this.jwtGenerator.generateToken(user, this.secret!, "5m");
 
     return {
       isSuccess: true,

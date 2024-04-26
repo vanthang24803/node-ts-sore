@@ -1,20 +1,17 @@
 import express, { Router } from "express";
 
 import uploads from "../middlewares/upload";
-import {
-  createImages,
-  deletedImages,
-  findAllImages,
-} from "../controllers/media";
+import { MediaController } from "../controllers/media";
 
 const router: Router = express.Router();
+const controller = new MediaController();
 
 router.post(
   "/products/:productId/media",
   [uploads.array("images")],
-  createImages
+  controller.createImages
 );
-router.delete("/products/:productId/media", deletedImages);
-router.get("/products/:productId/media", findAllImages);
+router.delete("/products/:productId/media", controller.deletedImages);
+router.get("/products/:productId/media", controller.findAllImages);
 
 export default router;

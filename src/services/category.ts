@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma";
 import ICategoryService from "../repositories/category";
 
 class CategoryService implements ICategoryService {
-  async createCategory(name: string) {
+  public async createCategory(name: string) {
     const newCategory = await prisma.category.create({
       data: {
         name,
@@ -12,11 +12,11 @@ class CategoryService implements ICategoryService {
     return newCategory;
   }
 
-  async findAllCategory() {
+  public async findAllCategory() {
     return await prisma.category.findMany();
   }
 
-  async isExist(id: string) {
+  public async isExist(id: string) {
     return Boolean(
       await prisma.category.findUnique({
         where: {
@@ -26,7 +26,7 @@ class CategoryService implements ICategoryService {
     );
   }
 
-  async updateCategory(id: string, name: string) {
+  public async updateCategory(id: string, name: string) {
     const updateCategory = await prisma.category.update({
       where: { id },
       data: {
@@ -37,7 +37,7 @@ class CategoryService implements ICategoryService {
     return updateCategory;
   }
 
-  async deleteCategory(id: string) {
+  public async deleteCategory(id: string) {
     await prisma.category.delete({
       where: {
         id,

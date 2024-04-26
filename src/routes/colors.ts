@@ -1,26 +1,29 @@
 import express, { Router } from "express";
 import validateMiddleware from "../middlewares/validate";
 import { ColorSchema } from "../models/color";
-import {
-  createColor,
-  deleteColor,
-  findColor,
-  updateColor,
-} from "../controllers/color";
+import { ColorController } from "../controllers/color";
 
 const router: Router = express.Router();
+
+const controller = new ColorController();
 
 router.post(
   "/products/:productId/options/:optionId/color",
   validateMiddleware(ColorSchema),
-  createColor
+  controller.createColor
 );
-router.get("/products/:productId/options/:optionId/color", findColor);
+router.get(
+  "/products/:productId/options/:optionId/color",
+  controller.findColor
+);
 router.put(
   "/products/:productId/options/:optionId/color",
   validateMiddleware(ColorSchema),
-  updateColor
+  controller.updateColor
 );
-router.delete("/products/:productId/options/:optionId/color", deleteColor);
+router.delete(
+  "/products/:productId/options/:optionId/color",
+  controller.deleteColor
+);
 
 export default router;

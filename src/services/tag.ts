@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma";
 import ITagService from "../repositories/tag";
 
 class TagService implements ITagService {
-  async create(productId: string, name: string) {
+  public async create(productId: string, name: string) {
     const result = await prisma.tag.create({
       data: {
         name,
@@ -12,14 +12,14 @@ class TagService implements ITagService {
     return result;
   }
 
-  async isExist(productId: string, id: string) {
+  public async isExist(productId: string, id: string) {
     const existingTag = await prisma.tag.findUnique({
       where: { id: id, productId: productId },
     });
     return Boolean(existingTag);
   }
 
-  async delete(productId: string, id: string) {
+  public async delete(productId: string, id: string) {
     await prisma.tag.delete({
       where: {
         id: id as string,
@@ -28,7 +28,7 @@ class TagService implements ITagService {
     });
   }
 
-  async update(productId: string, id: string, name: string) {
+  public async update(productId: string, id: string, name: string) {
     const result = await prisma.tag.update({
       where: {
         id: id as string,
@@ -41,7 +41,7 @@ class TagService implements ITagService {
     return result;
   }
 
-  async findById(id: string) {
+  public async findById(id: string) {
     return prisma.tag.findUnique({
       where: {
         id,

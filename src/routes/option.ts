@@ -1,24 +1,23 @@
 import express, { Router } from "express";
 import validateMiddleware from "../middlewares/validate";
 import { OptionSchema } from "../models/option";
-import {
-  createOption,
-  deleteOption,
-  findAllOption,
-  findDetailOption,
-  updateOption,
-} from "../controllers/option";
+import { OptionController } from "../controllers/option";
 
 const router: Router = express.Router();
+const controller = new OptionController();
 
-router.post("/products/:id/options", validateMiddleware(OptionSchema), createOption);
+router.post(
+  "/products/:id/options",
+  validateMiddleware(OptionSchema),
+  controller.createOption
+);
 router.put(
   "/:productId/options/:id",
   validateMiddleware(OptionSchema),
-  updateOption
+  controller.updateOption
 );
-router.get("/products/:id/options", findAllOption);
-router.get("/products/:productId/options/:id", findDetailOption);
-router.delete("/products/:productId/options/:id", deleteOption);
+router.get("/products/:id/options", controller.findAllOption);
+router.get("/products/:productId/options/:id", controller.findDetailOption);
+router.delete("/products/:productId/options/:id", controller.deleteOption);
 
 export default router;

@@ -3,7 +3,7 @@ import { Color } from "../models/color";
 import IColorService from "../repositories/color";
 
 class ColorService implements IColorService {
-  async create(planterId: string, data: Color) {
+  public async create(planterId: string, data: Color) {
     const { name, value } = data;
     const result = await prisma.color.create({
       data: {
@@ -16,7 +16,7 @@ class ColorService implements IColorService {
     return result;
   }
 
-  async delete(planterId: string, id: string) {
+  public async delete(planterId: string, id: string) {
     await prisma.color.delete({
       where: {
         id,
@@ -25,7 +25,7 @@ class ColorService implements IColorService {
     });
   }
 
-  async update(planterId: string, id: string, data: Color) {
+  public async update(planterId: string, id: string, data: Color) {
     const { name, value } = data;
 
     const result = await prisma.color.update({
@@ -41,7 +41,7 @@ class ColorService implements IColorService {
     return result;
   }
 
-  async findAll(planterId: string) {
+  public async findAll(planterId: string) {
     return await prisma.color.findMany({
       where: {
         planterId,
@@ -49,7 +49,7 @@ class ColorService implements IColorService {
     });
   }
 
-  async findById(planterId: string, id: string) {
+  public async findById(planterId: string, id: string) {
     return await prisma.color.findUnique({
       where: {
         id,

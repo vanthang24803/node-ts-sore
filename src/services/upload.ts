@@ -2,7 +2,7 @@ import cloudinary from "../configs/cloudinary";
 import IUploadService from "../repositories/upload";
 
 class UploadService implements IUploadService {
-  async upload(files: Express.Multer.File[] | undefined) {
+  public async upload(files: Express.Multer.File[] | undefined) {
     const images: string[] | undefined = files?.map(
       (file: Express.Multer.File) => file.path
     );
@@ -20,7 +20,7 @@ class UploadService implements IUploadService {
     return uploadImages;
   }
 
-  async delete(publicId: string) {
+  public async delete(publicId: string) {
     const result = await cloudinary.uploader.destroy(publicId);
 
     return result.result === "ok";

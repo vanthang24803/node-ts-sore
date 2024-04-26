@@ -4,12 +4,16 @@ import JwtGenerator from "../helpers/jwt-generator";
 import { prisma } from "../lib/prisma";
 import IProfileService from "../repositories/profile";
 
-const secret = process.env.SECRET;
-const jwtGenerator = new JwtGenerator();
-
 class ProfileService implements IProfileService {
-  async getProfile(token: string) {
-    const decoded = jwtGenerator.verifyToken(token, secret!);
+  private jwtGenerator: JwtGenerator;
+  private readonly secret = process.env.SECRET;
+
+  constructor() {
+    this.jwtGenerator = new JwtGenerator();
+  }
+
+  public async getProfile(token: string) {
+    const decoded = this.jwtGenerator.verifyToken(token, this.secret!);
 
     const user = await prisma.user.findFirst({
       where: {

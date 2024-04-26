@@ -3,15 +3,19 @@ import { Billboard } from "../models/billboard";
 import IBillboardService from "../repositories/billboard";
 import UploadService from "./upload";
 
-const uploadService = new UploadService();
-
 class BillboardService implements IBillboardService {
-  async createBillboardAsync(
+  private uploadService: UploadService;
+
+  constructor() {
+    this.uploadService = new UploadService();
+  }
+
+  public async createBillboardAsync(
     images: Express.Multer.File[] | undefined,
     data: Billboard
   ) {
     {
-      const imageUpload = await uploadService.upload(images);
+      const imageUpload = await this.uploadService.upload(images);
 
       const newBillboard = await prisma.billboard.create({
         data: {
@@ -27,11 +31,11 @@ class BillboardService implements IBillboardService {
     }
   }
 
-  async findAllBillboardAsync() {
+  public async findAllBillboardAsync() {
     return await prisma.billboard.findMany();
   }
 
-  async isBillboardExistAsync(id: string) {
+  public async isBillboardExistAsync(id: string) {
     return Boolean(
       await prisma.billboard.findUnique({
         where: {
@@ -41,7 +45,7 @@ class BillboardService implements IBillboardService {
     );
   }
 
-  async findBillboardDetailAsync(id: string) {
+  public async findBillboardDetailAsync(id: string) {
     return await prisma.billboard.findFirst({
       where: {
         id,
@@ -69,7 +73,9 @@ class BillboardService implements IBillboardService {
     });
 
     if (exitingBillboard) {
-      const result = await uploadService.delete(exitingBillboard.publicUrlId);
+      const result = await this.uploadService.delete(
+        exitingBillboard.publicUrlId
+      );
 
       if (result) {
         await prisma.billboard.delete({
@@ -83,4 +89,3 @@ class BillboardService implements IBillboardService {
 }
 
 export default BillboardService;
-

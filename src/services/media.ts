@@ -5,7 +5,10 @@ import UploadService from "./upload";
 const uploadService = new UploadService();
 
 class MediaService implements IMediaService {
-  async create(productId: string, images: Express.Multer.File[] | undefined) {
+  public async create(
+    productId: string,
+    images: Express.Multer.File[] | undefined
+  ) {
     const createdImages = [];
     const imageUploads = await uploadService.upload(images);
     for (const image of imageUploads) {
@@ -22,7 +25,7 @@ class MediaService implements IMediaService {
     return createdImages;
   }
 
-  async delete(id: string) {
+  public async delete(id: string) {
     const exitingMedia = await prisma.image.findUnique({
       where: {
         id: id,
@@ -49,7 +52,7 @@ class MediaService implements IMediaService {
     };
   }
 
-  async findAll(productId: string) {
+  public async findAll(productId: string) {
     return await prisma.image.findMany({
       where: {
         productId,

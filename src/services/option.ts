@@ -4,7 +4,7 @@ import { Option } from "../models/option";
 import IOptionService from "../repositories/option";
 
 class OptionService implements IOptionService {
-  async create(productId: string, data: Option) {
+  public async create(productId: string, data: Option) {
     const { name, price, sale, size } = data;
 
     const result = await prisma.option.create({
@@ -20,7 +20,7 @@ class OptionService implements IOptionService {
     return result;
   }
 
-  async update(productId: string, id: string, data: Option) {
+  public async update(productId: string, id: string, data: Option) {
     const { name, price, sale, size } = data;
 
     const result = await prisma.option.update({
@@ -39,7 +39,7 @@ class OptionService implements IOptionService {
     return result;
   }
 
-  async isExist(productId: string, id: string) {
+  public async isExist(productId: string, id: string) {
     const result = await prisma.option.findUnique({
       where: {
         id: id,
@@ -50,7 +50,7 @@ class OptionService implements IOptionService {
     return Boolean(result);
   }
 
-  async findAll(productId: string) {
+  public async findAll(productId: string) {
     const result = await prisma.option.findMany({
       where: {
         productId: productId,
@@ -60,7 +60,7 @@ class OptionService implements IOptionService {
     return result;
   }
 
-  async findById(productId: string, id: string) {
+  public async findById(productId: string, id: string) {
     return await prisma.option.findUnique({
       where: {
         id,
@@ -69,7 +69,7 @@ class OptionService implements IOptionService {
     });
   }
 
-  async delete(productId: string, id: string) {
+  public async delete(productId: string, id: string) {
     await prisma.option.delete({
       where: {
         id,

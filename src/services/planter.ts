@@ -2,7 +2,7 @@ import { prisma } from "../lib/prisma";
 import IPlanterService from "../repositories/planter";
 
 class PlanterService implements IPlanterService {
-  async create(optionId: string, name: string) {
+  public async create(optionId: string, name: string) {
     const result = await prisma.planter.create({
       data: {
         name,
@@ -12,14 +12,14 @@ class PlanterService implements IPlanterService {
     return result;
   }
 
-  async isExist(optionId: string, id: string) {
+  public async isExist(optionId: string, id: string) {
     const existingTag = await prisma.planter.findUnique({
       where: { id, optionId },
     });
     return Boolean(existingTag);
   }
 
-  async delete(optionId: string, id: string) {
+  public async delete(optionId: string, id: string) {
     await prisma.planter.delete({
       where: {
         id: id as string,
@@ -28,7 +28,7 @@ class PlanterService implements IPlanterService {
     });
   }
 
-  async update(optionId: string, id: string, name: string) {
+  public async update(optionId: string, id: string, name: string) {
     const result = await prisma.planter.update({
       where: { id, optionId },
       data: {
@@ -39,13 +39,13 @@ class PlanterService implements IPlanterService {
     return result;
   }
 
-  async findById(id: string) {
+  public async findById(id: string) {
     return await prisma.planter.findUnique({
       where: { id },
     });
   }
 
-  async findAll(optionId: string) {
+  public async findAll(optionId: string) {
     return prisma.planter.findMany({
       where: {
         optionId,

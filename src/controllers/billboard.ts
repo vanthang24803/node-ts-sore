@@ -5,98 +5,102 @@ import CategoryService from "../services/category";
 import { Billboard } from "../models/billboard";
 import { Status } from "../enum/status";
 
-const service = new BillboardService();
-const categoryService = new CategoryService();
+export class BillboardController {
+  private billboardService: BillboardService;
+  private categoryService: CategoryService;
 
-export const createBillboard = async (req: Request, res: Response) => {
-  try {
-    const images = req.files as Express.Multer.File[] | undefined;
-
-    const body: Billboard = req.body;
-
-    const isCategoryExist = await categoryService.isExist(body.categoryId);
-
-    if (!isCategoryExist) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Category"));
-    }
-
-    const result = await service.createBillboardAsync(images, body);
-
-    return res.status(200).json(responseStatus(Status.Success, result));
-  } catch (error) {
-    res.status(500).json(responseStatus(Status.ServerError));
-    throw error;
+  constructor() {
+    this.billboardService = new BillboardService();
+    this.categoryService = new CategoryService();
   }
-};
 
-export const findAllBillboard = async (req: Request, res: Response) => {
-  try {
-    const result = await service.findAllBillboardAsync();
+  public createBillboard = async (req: Request, res: Response) => {
+    try {
+      const images = req.files as Express.Multer.File[] | undefined;
+      const body: Billboard = req.body;
 
-    res.status(200).json(responseStatus(Status.Success, result));
-  } catch (error) {
-    res.status(500).json(responseStatus(Status.ServerError));
-    throw error;
-  }
-};
+      const isCategoryExist = await this.categoryService.isExist(body.categoryId);
 
-export const updateBillboard = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-    const body: Billboard = req.body;
-    const isBillboardExist = await service.isBillboardExistAsync(id);
+      if (!isCategoryExist) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Category"));
+      }
 
-    if (!isBillboardExist) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Billboard"));
+      const result = await this.billboardService.createBillboardAsync(images, body);
+
+      return res.status(200).json(responseStatus(Status.Success, result));
+    } catch (error) {
+      res.status(500).json(responseStatus(Status.ServerError));
+      throw error;
     }
+  };
 
-    const result = await service.updateBillboardAsync(id, body);
+  public findAllBillboard = async (req: Request, res: Response) => {
+    try {
+      const result = await this.billboardService.findAllBillboardAsync();
 
-    res.status(200).json(responseStatus(Status.Success, result));
-  } catch (error) {
-    res.status(500).json(responseStatus(Status.ServerError));
-    throw error;
-  }
-};
-
-export const findBillboardDetail = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
-
-    const isBillboardExist = await service.isBillboardExistAsync(id);
-
-    if (!isBillboardExist) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Billboard"));
-    }
-
-    const result = await service.findBillboardDetailAsync(id);
-
-    if (result) {
       res.status(200).json(responseStatus(Status.Success, result));
+    } catch (error) {
+      res.status(500).json(responseStatus(Status.ServerError));
+      throw error;
     }
-  } catch (error) {
-    res.status(500).json(responseStatus(Status.ServerError));
-    throw error;
-  }
-};
+  };
 
-export const deleteBillboard = async (req: Request, res: Response) => {
-  try {
-    const { id } = req.params;
+  public updateBillboard = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const body: Billboard = req.body;
+      const isBillboardExist = await this.billboardService.isBillboardExistAsync(id);
 
-    const isBillboardExist = await service.isBillboardExistAsync(id);
+      if (!isBillboardExist) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Billboard"));
+      }
 
-    if (!isBillboardExist) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Billboard"));
+      const result = await this.billboardService.updateBillboardAsync(id, body);
+
+      res.status(200).json(responseStatus(Status.Success, result));
+    } catch (error) {
+      res.status(500).json(responseStatus(Status.ServerError));
+      throw error;
     }
+  };
 
-    await service.deleteBillboardAsync(id);
+  public findBillboardDetail = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const isBillboardExist = await this.billboardService.isBillboardExistAsync(id);
 
-    res
-      .status(200)
-      .json(responseStatus(Status.Success, "Billboard deleted successfully!"));
-  } catch (error) {
-    res.status(500).json(responseStatus(Status.ServerError));
-    throw error;
-  }
-};
+      if (!isBillboardExist) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Billboard"));
+      }
+
+      const result = await this.billboardService.findBillboardDetailAsync(id);
+
+      if (result) {
+        res.status(200).json(responseStatus(Status.Success, result));
+      }
+    } catch (error) {
+      res.status(500).json(responseStatus(Status.ServerError));
+      throw error;
+    }
+  };
+
+  public deleteBillboard = async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const isBillboardExist = await this.billboardService.isBillboardExistAsync(id);
+
+      if (!isBillboardExist) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Billboard"));
+      }
+
+      await this.billboardService.deleteBillboardAsync(id);
+
+      res
+        .status(200)
+        .json(responseStatus(Status.Success, "Billboard deleted successfully!"));
+    } catch (error) {
+      res.status(500).json(responseStatus(Status.ServerError));
+      throw error;
+    }
+  };
+}

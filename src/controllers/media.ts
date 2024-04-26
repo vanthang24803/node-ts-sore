@@ -4,90 +4,102 @@ import { Status } from "../enum/status";
 import ProductService from "../services/product";
 import MediaService from "../services/media";
 
-const productService = new ProductService();
-const mediaService = new MediaService();
+export class MediaController {
+  private productService: ProductService;
+  private mediaService: MediaService;
 
-export const createImages = async (req: Request, res: Response) => {
-  try {
-    const { productId } = req.params;
-    const existingProduct = await productService.isProductExist(productId);
-
-    if (!existingProduct) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
-    }
-
-    const { method } = req.query;
-
-    if (method === "create") {
-      const images = req.files as Express.Multer.File[] | undefined;
-
-      const result = await mediaService.create(productId, images);
-
-      return res.status(200).json(result);
-    }
-
-    return res
-      .status(400)
-      .json(responseStatus(Status.BadRequest, "Invalid Params"));
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(responseStatus(Status.ServerError));
+  constructor() {
+    this.productService = new ProductService();
+    this.mediaService = new MediaService();
   }
-};
+  public createImages = async (req: Request, res: Response) => {
+    try {
+      const { productId } = req.params;
+      const existingProduct = await this.productService.isProductExist(
+        productId
+      );
 
-export const deletedImages = async (req: Request, res: Response) => {
-  try {
-    const { productId } = req.params;
-    const existingProduct = await productService.isProductExist(productId);
+      if (!existingProduct) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+      }
 
-    if (!existingProduct) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
-    }
+      const { method } = req.query;
 
-    const { method, id } = req.query;
+      if (method === "create") {
+        const images = req.files as Express.Multer.File[] | undefined;
 
-    if (method === "delete" && id) {
-      const result = await mediaService.delete(id as string);
+        const result = await this.mediaService.create(productId, images);
 
-      if (result.isSuccess) {
         return res.status(200).json(result);
       }
 
-      return res.status(400).json(result);
+      return res
+        .status(400)
+        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(responseStatus(Status.ServerError));
     }
+  };
 
-    return res
-      .status(400)
-      .json(responseStatus(Status.BadRequest, "Invalid Params"));
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(responseStatus(Status.ServerError));
-  }
-};
+  public deletedImages = async (req: Request, res: Response) => {
+    try {
+      const { productId } = req.params;
+      const existingProduct = await this.productService.isProductExist(
+        productId
+      );
 
-export const findAllImages = async (req: Request, res: Response) => {
-  try {
-    const { productId } = req.params;
+      if (!existingProduct) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+      }
 
-    const existingProduct = await productService.isProductExist(productId);
+      const { method, id } = req.query;
 
-    if (!existingProduct) {
-      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+      if (method === "delete" && id) {
+        const result = await this.mediaService.delete(id as string);
+
+        if (result.isSuccess) {
+          return res.status(200).json(result);
+        }
+
+        return res.status(400).json(result);
+      }
+
+      return res
+        .status(400)
+        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(responseStatus(Status.ServerError));
     }
+  };
 
-    const { method } = req.query;
+  public findAllImages = async (req: Request, res: Response) => {
+    try {
+      const { productId } = req.params;
 
-    if (method === "all") {
-      const result = await mediaService.findAll(productId);
+      const existingProduct = await this.productService.isProductExist(
+        productId
+      );
 
-      return res.status(200).json(responseStatus(Status.Success, result));
+      if (!existingProduct) {
+        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+      }
+
+      const { method } = req.query;
+
+      if (method === "all") {
+        const result = await this.mediaService.findAll(productId);
+
+        return res.status(200).json(responseStatus(Status.Success, result));
+      }
+
+      return res
+        .status(400)
+        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+    } catch (error) {
+      console.log(error);
+      return res.status(500).json(responseStatus(Status.ServerError));
     }
-
-    return res
-      .status(400)
-      .json(responseStatus(Status.BadRequest, "Invalid Params"));
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json(responseStatus(Status.ServerError));
-  }
-};
+  };
+}
