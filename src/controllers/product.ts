@@ -1,50 +1,51 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
 import { Product, UpdateProduct } from "../models/product";
 import { prisma } from "../lib/prisma";
 import ProductService from "../services/product";
 import CategoryService from "../services/category";
+import { Http } from "../helpers/http";
 
 export class ProductController {
-  private services:ProductService;
-  private categoryService:CategoryService;
+  private services: ProductService;
+  private categoryService: CategoryService;
 
-  constructor(){
+  constructor() {
     this.services = new ProductService();
     this.categoryService = new CategoryService();
   }
-  
+
   public createProduct = async (req: Request, res: Response) => {
     try {
       const data: Product = req.body;
       const images = req.files as Express.Multer.File[] | undefined;
-  
-      const exitingCategory = await this.categoryService.isExist(data.categoryId);
-  
+
+      const exitingCategory = await this.categoryService.isExist(
+        data.categoryId
+      );
+
       if (!exitingCategory) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Category"));
+        return Http.NotFound(res, "Category not found");
       }
-  
+
       const result = await this.services.createProductAsync(images, data);
-  
-      return res.status(200).json(responseStatus(Status.Success, result));
+
+      return Http.Created(res, result);
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
-  
+
   public findAllProduct = async (req: Request, res: Response) => {
     try {
       const { name, category } = req.query;
-  
+
       if (!name && !category) {
         const result = await this.services.findAllProductAsync();
-  
-        return res.status(200).json(responseStatus(Status.Success, result));
+
+        return Http.Ok(res, result);
       }
-  
+
       const result = await prisma.product.findMany({
         where: {
           name: {
@@ -77,78 +78,71 @@ export class ProductController {
           tag: true,
         },
       });
-  
+
       if (result.length === 0) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found");
       }
-  
-      return res.status(200).json(responseStatus(Status.Success, result));
+
+      return Http.Ok(res, result);
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
-  
+
   public findDetailProduct = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-  
+
       const result = await this.services.findDetailProductAsync(id);
-  
+
       if (result) {
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Ok(res, result);
       }
-  
-      return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+
+      return Http.NotFound(res, "Product not found");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
-  
+
   public updateProduct = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
       const body: UpdateProduct = req.body;
-  
+
       const exitingProduct = await this.services.isProductExist(id);
-  
+
       if (!exitingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
-  
+
       const result = await this.services.updateProductAsync(id, body);
-  
-      return res.status(200).json(responseStatus(Status.Success, result));
+
+      return Http.Ok(res, result);
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
-  
+
   public deleteProduct = async (req: Request, res: Response) => {
     try {
       const { id } = req.params;
-  
+
       const exitingProduct = await this.services.isProductExist(id);
-  
+
       if (!exitingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
-  
+
       await this.services.deleteProductAsync(id);
-  
-      return res
-        .status(200)
-        .json(responseStatus(Status.Success, "Product deleted success"));
+
+      return Http.Ok(res, "Product deleted successfully!");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
-
-
 }
-
-
-

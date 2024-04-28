@@ -6,11 +6,6 @@ import ITokenService from "../repositories/token";
 class TokenService implements ITokenService {
   private readonly secret = process.env.SECRET;
   private readonly refresh = process.env.REFRESH;
-  private jwtGenerator: JwtGenerator;
-
-  constructor() {
-    this.jwtGenerator = new JwtGenerator();
-  }
 
   public async generateToken(token: string, id: string) {
     const exitingToken = await prisma.token.findFirst({
@@ -82,8 +77,8 @@ class TokenService implements ITokenService {
       id: exitingUser?.id,
     };
 
-    this.jwtGenerator.verifyToken(token, this.refresh!);
-    const accessToken = this.jwtGenerator.generateToken(user, this.secret!, "5m");
+    JwtGenerator.verifyToken(token, this.refresh!);
+    const accessToken = JwtGenerator.generateToken(user, this.secret!, "5m");
 
     return {
       isSuccess: true,

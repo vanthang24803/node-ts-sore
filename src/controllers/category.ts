@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
 import CategoryService from "../services/category";
+import { Http } from "../helpers/http";
 
 export class CategoryController {
   private categoryService: CategoryService;
@@ -16,20 +15,20 @@ export class CategoryController {
 
       const result = await this.categoryService.createCategory(name);
 
-      res.status(200).json(responseStatus(Status.Success, result));
+      return Http.Created(res, result);
     } catch (error) {
-      res.status(500).json(responseStatus(Status.ServerError));
-      throw error;
+      console.log(error);
+      return Http.ServerError(res);
     }
   };
 
   public findAllAsync = async (req: Request, res: Response) => {
     try {
       const result = await this.categoryService.findAllCategory();
-      res.status(200).json(responseStatus(Status.Success, result));
+      return Http.Ok(res, result);
     } catch (error) {
-      res.status(500).json(responseStatus(Status.ServerError));
-      throw error;
+      console.log(error);
+      return Http.ServerError(res);
     }
   };
 
@@ -40,14 +39,14 @@ export class CategoryController {
       const categoryExists = await this.categoryService.isExist(id);
 
       if (!categoryExists) {
-        return res.status(400).json(responseStatus(Status.NotFound, "Category"));
+        return Http.NotFound(res, "Category not found!");
       }
 
       const result = await this.categoryService.updateCategory(id, name);
-      res.status(200).json(responseStatus(Status.Success, result));
+      return Http.Ok(res, result);
     } catch (error) {
-      res.status(500).json(responseStatus(Status.BadRequest));
-      throw error;
+      console.log(error);
+      return Http.ServerError(res);
     }
   };
 
@@ -57,17 +56,15 @@ export class CategoryController {
       const categoryExists = await this.categoryService.isExist(id);
 
       if (!categoryExists) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Category"));
+        return Http.NotFound(res, "Category not found!");
       }
 
       await this.categoryService.deleteCategory(id);
 
-      res
-        .status(200)
-        .json(responseStatus(Status.Success, "Category deleted successfully"));
+      return Http.Ok(res, "Category deleted successfully!");
     } catch (error) {
-      res.status(500).json(responseStatus(Status.ServerError));
-      throw error;
+      console.log(error);
+      return Http.ServerError(res);
     }
   };
 }

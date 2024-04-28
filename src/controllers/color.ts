@@ -1,11 +1,10 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
 
 import ProductService from "../services/product";
 import OptionService from "../services/option";
 import PlanterService from "../services/planter";
 import ColorService from "../services/color";
+import { Http } from "../helpers/http";
 
 export class ColorController {
   private productService: ProductService;
@@ -29,7 +28,7 @@ export class ColorController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -38,7 +37,7 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.BadRequest(res, "Option not found!");
       }
 
       const { method, planterId } = req.query;
@@ -50,9 +49,7 @@ export class ColorController {
         );
 
         if (!existingPlanter) {
-          return res
-            .status(404)
-            .json(responseStatus(Status.NotFound, "Planter"));
+          return Http.BadRequest(res, "Planter not found!");
         }
 
         const result = await this.colorService.create(
@@ -60,15 +57,13 @@ export class ColorController {
           req.body
         );
 
-        return res.status(201).json(responseStatus(Status.Created, result));
+        return Http.Created(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -81,7 +76,7 @@ export class ColorController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -90,7 +85,7 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.BadRequest(res, "Option not found!");
       }
 
       const { method, planterId, id } = req.query;
@@ -102,14 +97,12 @@ export class ColorController {
         );
 
         if (!existingPlanter) {
-          return res
-            .status(404)
-            .json(responseStatus(Status.NotFound, "Planter"));
+          return Http.BadRequest(res, "Planter not found!");
         }
 
         const result = await this.colorService.findAll(planterId as string);
 
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Ok(res, result);
       }
 
       if (method === "detail" && planterId && id) {
@@ -119,9 +112,7 @@ export class ColorController {
         );
 
         if (!existingPlanter) {
-          return res
-            .status(404)
-            .json(responseStatus(Status.NotFound, "Planter"));
+          return Http.BadRequest(res, "Planter not found!");
         }
 
         const result = await this.colorService.findById(
@@ -130,18 +121,16 @@ export class ColorController {
         );
 
         if (result) {
-          return res.status(200).json(responseStatus(Status.Success, result));
+          return Http.Ok(res, result);
         }
 
-        return res.status(404).json(responseStatus(Status.NotFound, "Color"));
+        return Http.NotFound(res, "Color not found!");
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -154,7 +143,7 @@ export class ColorController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -163,7 +152,7 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.BadRequest(res, "Option not found!");
       }
 
       const { method, planterId, id } = req.query;
@@ -175,9 +164,7 @@ export class ColorController {
         );
 
         if (!existingPlanter) {
-          return res
-            .status(404)
-            .json(responseStatus(Status.NotFound, "Planter"));
+          return Http.BadRequest(res, "Planter not found!");
         }
 
         const result = await this.colorService.update(
@@ -187,18 +174,16 @@ export class ColorController {
         );
 
         if (result) {
-          return res.status(200).json(responseStatus(Status.Success, result));
+          return Http.Ok(res, result);
         }
 
-        return res.status(404).json(responseStatus(Status.NotFound, "Color"));
+        return Http.NotFound(res, "Color not found!");
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -211,7 +196,7 @@ export class ColorController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -220,7 +205,7 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.BadRequest(res, "Option not found!");
       }
 
       const { method, planterId, id } = req.query;
@@ -232,23 +217,17 @@ export class ColorController {
         );
 
         if (!existingPlanter) {
-          return res
-            .status(404)
-            .json(responseStatus(Status.NotFound, "Planter"));
+          return Http.BadRequest(res, "Planter not found!");
         }
 
         await this.colorService.delete(planterId as string, id as string);
-        return res
-          .status(200)
-          .json(responseStatus(Status.Success, "Color deleted success"));
+        return Http.Ok(res, "Color deleted successfully!");
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 }

@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
 
 import ProductService from "../services/product";
 import TagService from "../services/tag";
+
+import { Http } from "../helpers/http";
 
 export class TagController {
   private productService: ProductService;
@@ -22,7 +22,7 @@ export class TagController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method } = req.query;
@@ -32,15 +32,13 @@ export class TagController {
 
         const result = await this.tagService.create(productId, name);
 
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Created(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
 
@@ -52,7 +50,7 @@ export class TagController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method, id } = req.query;
@@ -64,22 +62,18 @@ export class TagController {
         );
 
         if (!existingTag) {
-          return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
+          return Http.NotFound(res, "Tag not found!");
         }
 
         await this.tagService.delete(productId, id as string);
 
-        return res
-          .status(200)
-          .json(responseStatus(Status.Success, "Tag deleted successfully"));
+        return Http.Ok(res, "Tag deleted successfully!");
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
 
@@ -91,7 +85,7 @@ export class TagController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method, id } = req.query;
@@ -103,7 +97,7 @@ export class TagController {
         );
 
         if (!existingTag) {
-          return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
+          return Http.NotFound(res, "Tag not found!");
         }
 
         const { name } = req.body;
@@ -114,15 +108,13 @@ export class TagController {
           name
         );
 
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Ok(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
 
@@ -134,7 +126,7 @@ export class TagController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method, id } = req.query;
@@ -143,18 +135,16 @@ export class TagController {
         const result = await this.tagService.findById(id as string);
 
         if (!result) {
-          return res.status(404).json(responseStatus(Status.NotFound, "Tag"));
+          return Http.NotFound(res, "Tag not found!");
         }
 
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Ok(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.BadRequest));
+      return Http.ServerError(res);
     }
   };
 }

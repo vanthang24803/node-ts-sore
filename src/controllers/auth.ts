@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
 import AuthService from "../services/auth";
 import TokenService from "../services/token";
 import ProfileService from "../services/profile";
+import { Http } from "../helpers/http";
 
 export class AuthController {
   private authService: AuthService;
@@ -20,10 +19,10 @@ export class AuthController {
     try {
       const result = await this.authService.register(req.body);
 
-      return res.status(201).json(responseStatus(Status.Created, result));
+      return Http.Created(res, result);
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -32,13 +31,13 @@ export class AuthController {
       const result = await this.authService.login(req.body);
 
       if (result.isSuccess) {
-        return res.status(200).json(result);
+        return Http.Ok(res, result);
       }
 
-      return res.status(401).json(result);
+      return Http.Unauthorized(res);
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -49,13 +48,13 @@ export class AuthController {
       const result = await this.tokenService.refreshToken(refreshToken);
 
       if (result.isSuccess) {
-        return res.status(200).json(result);
+        return Http.Ok(res, result);
       }
 
-      return res.status(400).json(result);
+      return Http.Unauthorized(res);
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -65,27 +64,23 @@ export class AuthController {
       const token = header && header.split(" ")[1];
 
       if (!token) {
-        return res.status(401).json({
-          message: "Unauthorized",
-        });
+        return Http.Unauthorized(res);
       }
       try {
         const result = await this.profileService.getProfile(token);
 
         if (result) {
-          return res.status(200).json(result);
+          return Http.Ok(res, result);
         }
 
-        return res.send(401).json({ message: "Unauthorized" });
+        return Http.Unauthorized(res);
       } catch (error) {
         console.log(error);
-        return res.status(403).json({
-          message: "Forbidden",
-        });
+        return Http.Forbidden(res);
       }
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 }

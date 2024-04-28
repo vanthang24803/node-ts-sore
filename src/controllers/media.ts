@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
+
 import ProductService from "../services/product";
 import MediaService from "../services/media";
+import { Http } from "../helpers/http";
 
 export class MediaController {
   private productService: ProductService;
@@ -20,7 +20,7 @@ export class MediaController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method } = req.query;
@@ -30,15 +30,13 @@ export class MediaController {
 
         const result = await this.mediaService.create(productId, images);
 
-        return res.status(200).json(result);
+        return Http.Created(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -50,7 +48,7 @@ export class MediaController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method, id } = req.query;
@@ -59,18 +57,16 @@ export class MediaController {
         const result = await this.mediaService.delete(id as string);
 
         if (result.isSuccess) {
-          return res.status(200).json(result);
+          return Http.Ok(res, result);
         }
 
-        return res.status(400).json(result);
+        return Http.BadRequest(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -83,7 +79,7 @@ export class MediaController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const { method } = req.query;
@@ -91,15 +87,13 @@ export class MediaController {
       if (method === "all") {
         const result = await this.mediaService.findAll(productId);
 
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Ok(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.log(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 }

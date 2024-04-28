@@ -14,7 +14,7 @@ app.use("/api/v1", router);
 const PORT: string | number = process.env.PORT || 3000;
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World 123");
+  res.send("Hello World");
 });
 
 Connection();

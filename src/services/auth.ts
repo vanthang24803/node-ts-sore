@@ -9,13 +9,11 @@ import JwtGenerator from "../helpers/jwt-generator";
 import TokenService from "./token";
 
 class AuthService implements IAuthService {
-  private jwtGenerator: JwtGenerator;
   private tokenService: TokenService;
   private secret = process.env.SECRET;
   private refresh = process.env.REFRESH;
 
   constructor() {
-    this.jwtGenerator = new JwtGenerator();
     this.tokenService = new TokenService();
   }
 
@@ -61,13 +59,13 @@ class AuthService implements IAuthService {
       };
     }
 
-    const accessToken = this.jwtGenerator.generateToken(
+    const accessToken = JwtGenerator.generateToken(
       { id: exitingUser.id },
       this.secret!,
       "5m"
     );
 
-    const refreshToken = this.jwtGenerator.generateToken(
+    const refreshToken = JwtGenerator.generateToken(
       { id: exitingUser.id },
       this.refresh!,
       "30d"

@@ -1,10 +1,9 @@
 import { Request, Response } from "express";
-import responseStatus from "../helpers/response";
-import { Status } from "../enum/status";
 
 import ProductService from "../services/product";
 import OptionService from "../services/option";
 import PlanterService from "../services/planter";
+import { Http } from "../helpers/http";
 
 export class PlanterController {
   private productService: ProductService;
@@ -26,13 +25,13 @@ export class PlanterController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(productId, id);
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.NotFound(res, "Option not found!");
       }
 
       const { method } = req.query;
@@ -42,15 +41,13 @@ export class PlanterController {
 
         const result = await this.planterService.create(id, name);
 
-        return res.status(201).json(responseStatus(Status.Success, result));
+        return Http.Created(res, result);
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -63,7 +60,7 @@ export class PlanterController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -72,7 +69,7 @@ export class PlanterController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.NotFound(res, "Option not found!");
       }
 
       const { method, id } = req.query;
@@ -80,25 +77,23 @@ export class PlanterController {
       if (method === "all") {
         const result = await this.planterService.findAll(optionId);
 
-        return res.status(200).json(responseStatus(Status.Success, result));
+        return Http.Ok(res, result);
       }
 
       if (method === "detail" && id) {
         const result = await this.planterService.findById(id as string);
 
         if (result) {
-          return res.status(200).json(responseStatus(Status.Success, result));
+          return Http.Ok(res, result);
         }
 
-        return res.status(404).json(responseStatus(Status.NotFound, "Planter"));
+        return Http.NotFound(res, "Planter not found!");
       }
 
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -111,7 +106,7 @@ export class PlanterController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -120,7 +115,7 @@ export class PlanterController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.NotFound(res, "Option not found!");
       }
 
       const { method, id } = req.query;
@@ -134,17 +129,15 @@ export class PlanterController {
         );
 
         if (result) {
-          return res.status(200).json(responseStatus(Status.Success, result));
+          return Http.Ok(res, result);
         }
 
-        return res.status(404).json(responseStatus(Status.NotFound, "Planter"));
+        return Http.NotFound(res, "Planter not found!");
       }
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 
@@ -157,7 +150,7 @@ export class PlanterController {
       );
 
       if (!existingProduct) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Product"));
+        return Http.NotFound(res, "Product not found!");
       }
 
       const existingOption = await this.optionService.isExist(
@@ -166,23 +159,19 @@ export class PlanterController {
       );
 
       if (!existingOption) {
-        return res.status(404).json(responseStatus(Status.NotFound, "Option"));
+        return Http.NotFound(res, "Option not found!");
       }
 
       const { method, id } = req.query;
       if (method === "delete" && id) {
         await this.planterService.delete(optionId, id as string);
 
-        return res
-          .status(200)
-          .json(responseStatus(Status.Success, "Plater deleted successfully"));
+        return Http.Ok(res, "Planter deleted successfully!");
       }
-      return res
-        .status(400)
-        .json(responseStatus(Status.BadRequest, "Invalid Params"));
+      return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
       console.error(error);
-      return res.status(500).json(responseStatus(Status.ServerError));
+      return Http.ServerError(res);
     }
   };
 }

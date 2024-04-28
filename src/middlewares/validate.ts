@@ -1,5 +1,6 @@
 import * as z from "zod";
 import { Request, Response, NextFunction } from "express";
+import { Http } from "../helpers/http";
 
 const validateMiddleware =
   <T>(schema: z.ZodSchema<T>) =>
@@ -8,7 +9,7 @@ const validateMiddleware =
       schema.parse(req.body);
       next();
     } catch (error) {
-      res.status(400).send(error);
+      return Http.BadRequest(res , error); 
     }
   };
 

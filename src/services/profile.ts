@@ -5,15 +5,10 @@ import { prisma } from "../lib/prisma";
 import IProfileService from "../repositories/profile";
 
 class ProfileService implements IProfileService {
-  private jwtGenerator: JwtGenerator;
   private readonly secret = process.env.SECRET;
 
-  constructor() {
-    this.jwtGenerator = new JwtGenerator();
-  }
-
   public async getProfile(token: string) {
-    const decoded = this.jwtGenerator.verifyToken(token, this.secret!);
+    const decoded = JwtGenerator.verifyToken(token, this.secret!);
 
     const user = await prisma.user.findFirst({
       where: {
