@@ -68,6 +68,21 @@ class ProductService implements IProductService {
     return products.map(({ description, guide, ...rest }) => rest);
   }
 
+  public async search(query: string | undefined) {
+    const products = await prisma.product.findMany({
+      where: {
+        name: {
+          contains: query,
+        },
+      },
+      include: {
+        options: true,
+        tag: true,
+      },
+    });
+    return products.map(({ description, guide, ...rest }) => rest);
+  }
+
   public async isProductExist(id: string) {
     return Boolean(prisma.product.findUnique({ where: { id } }));
   }

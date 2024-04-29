@@ -55,6 +55,9 @@ class OptionService implements IOptionService {
       where: {
         productId: productId,
       },
+      include : {
+        Planter : true,
+      }
     });
 
     return result;

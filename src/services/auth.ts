@@ -62,7 +62,7 @@ class AuthService implements IAuthService {
     const accessToken = JwtGenerator.generateToken(
       { id: exitingUser.id },
       this.secret!,
-      "5m"
+      "10m"
     );
 
     const refreshToken = JwtGenerator.generateToken(

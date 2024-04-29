@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { Product, UpdateProduct } from "../models/product";
-import { prisma } from "../lib/prisma";
 import ProductService from "../services/product";
 import CategoryService from "../services/category";
 import { Http } from "../helpers/http";
@@ -38,51 +37,20 @@ export class ProductController {
 
   public findAllProduct = async (req: Request, res: Response) => {
     try {
-      const { name, category } = req.query;
+      const result = await this.services.findAllProductAsync();
 
-      if (!name && !category) {
-        const result = await this.services.findAllProductAsync();
+      return Http.Ok(res, result);
+    } catch (error) {
+      console.log(error);
+      return Http.ServerError(res);
+    }
+  };
 
-        return Http.Ok(res, result);
-      }
+  public searchProduct = async (req: Request, res: Response) => {
+    try {
+      const { q } = req.query;
 
-      const result = await prisma.product.findMany({
-        where: {
-          name: {
-            contains: name as string,
-            mode: "insensitive",
-          },
-          categories: {
-            every: {
-              category: {
-                name: {
-                  equals: category as string,
-                  mode: "insensitive",
-                },
-              },
-            },
-          },
-        },
-        include: {
-          options: {
-            select: {
-              id: true,
-              name: true,
-              sale: true,
-              price: true,
-              size: true,
-              createAt: true,
-              updateAt: true,
-            },
-          },
-          tag: true,
-        },
-      });
-
-      if (result.length === 0) {
-        return Http.NotFound(res, "Product not found");
-      }
-
+      const result = await this.services.search(q as string);
       return Http.Ok(res, result);
     } catch (error) {
       console.log(error);

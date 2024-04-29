@@ -13,6 +13,10 @@ interface IProductService {
   updateProductAsync(id: string, data: UpdateProduct): Promise<unknown>;
 
   deleteProductAsync(id: string): Promise<void>;
+
+  search(query: string | undefined): Promise<unknown>;
 }
+
+
 
 export default IProductService;
