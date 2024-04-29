@@ -37,7 +37,11 @@ export class ProductController {
 
   public findAllProduct = async (req: Request, res: Response) => {
     try {
-      const result = await this.services.findAllProductAsync();
+      const { limit, page } = req.query;
+      const result = await this.services.findAllProductAsync(
+        limit as string,
+        page as string
+      );
 
       return Http.Ok(res, result);
     } catch (error) {

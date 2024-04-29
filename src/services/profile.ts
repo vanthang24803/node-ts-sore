@@ -10,9 +10,9 @@ class ProfileService implements IProfileService {
   public async getProfile(token: string) {
     const decoded = JwtGenerator.verifyToken(token, this.secret!);
 
-    const user = await prisma.user.findFirst({
+    const user = await prisma.user.findUnique({
       where: {
-        id: decoded?.id,
+        id: decoded.data.id,
       },
     });
 

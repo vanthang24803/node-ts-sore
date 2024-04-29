@@ -2,15 +2,20 @@ import { prisma } from "../lib/prisma";
 import IMediaService from "../repositories/media";
 import UploadService from "./upload";
 
-const uploadService = new UploadService();
 
 class MediaService implements IMediaService {
+  private uploadService : UploadService;
+
+  constructor() {
+    this.uploadService = new UploadService();
+  }
+
   public async create(
     productId: string,
     images: Express.Multer.File[] | undefined
   ) {
     const createdImages = [];
-    const imageUploads = await uploadService.upload(images);
+    const imageUploads = await this.uploadService.upload(images);
     for (const image of imageUploads) {
       const result = await prisma.image.create({
         data: {
@@ -33,7 +38,7 @@ class MediaService implements IMediaService {
     });
 
     if (exitingMedia) {
-      await uploadService.delete(exitingMedia.id);
+      await this.uploadService.delete(exitingMedia.id);
 
       await prisma.image.delete({
         where: {

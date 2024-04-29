@@ -2,6 +2,7 @@ import "dotenv/config";
 import { prisma } from "../lib/prisma";
 import JwtGenerator from "../helpers/jwt-generator";
 import ITokenService from "../repositories/token";
+import { Token } from "../enum/token";
 
 class TokenService implements ITokenService {
   private readonly secret = process.env.SECRET;
@@ -10,7 +11,7 @@ class TokenService implements ITokenService {
   public async generateToken(token: string, id: string) {
     const exitingToken = await prisma.token.findFirst({
       where: {
-        name: "refreshToken",
+        name: Token.Refresh,
         userId: id,
       },
     });
@@ -18,7 +19,7 @@ class TokenService implements ITokenService {
     if (!exitingToken) {
       await prisma.token.create({
         data: {
-          name: "refreshToken",
+          name: Token.Refresh,
           value: token,
           expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           userId: id,
@@ -39,7 +40,7 @@ class TokenService implements ITokenService {
 
       await prisma.token.create({
         data: {
-          name: "refreshToken",
+          name: Token.Refresh,
           value: token,
           expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           userId: id,

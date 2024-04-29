@@ -15,8 +15,11 @@ interface IProductService {
   deleteProductAsync(id: string): Promise<void>;
 
   search(query: string | undefined): Promise<unknown>;
+
+  findAllProductAsync(
+    limit: string | number | undefined,
+    page: string | number | undefined
+  ): Promise<unknown>;
 }
-
-
 
 export default IProductService;

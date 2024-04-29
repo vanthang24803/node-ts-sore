@@ -47,7 +47,12 @@ class ProductService implements IProductService {
     return newProduct;
   }
 
-  public async findAllProductAsync() {
+  public async findAllProductAsync(
+    limit: string | number | undefined,
+    page: string | number | undefined
+  ) {
+    const defaultLimit = 20;
+
     const products = await prisma.product.findMany({
       include: {
         options: {
@@ -63,9 +68,25 @@ class ProductService implements IProductService {
         },
         tag: true,
       },
+      skip: page && limit ? (Number(page) - 1) * Number(limit) : undefined,
+      take: limit ? Number(limit) : defaultLimit,
     });
 
-    return products.map(({ description, guide, ...rest }) => rest);
+    const totalProducts = await prisma.product.count();
+
+    const totalPages = Math.ceil(
+      totalProducts / (limit ? Number(limit) : defaultLimit)
+    );
+
+    const response = {
+      limit: Number(limit ? limit : defaultLimit),
+      totalProducts,
+      page: Number(page ? page : 1),
+      totalPages,
+      products: products.map(({ description, guide, ...rest }) => rest),
+    };
+
+    return response;
   }
 
   public async search(query: string | undefined) {
