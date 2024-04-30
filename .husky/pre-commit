@@ -1,4 +1,4 @@
-echo "Runing build 💀💀💀💀"
+echo "Runing build application 💀💀💀💀💀"
 pnpm build
 
-echo "Sucess 👏👏"
+echo "Application build sucess 👏👏👏👏👏"
