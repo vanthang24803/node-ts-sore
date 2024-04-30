@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc --build",
     "start": "node ./dist/main.js",
-    "dev": "nodemon ./src/main.ts"
+    "dev": "nodemon ./src/main.ts",
+    "prepare": "husky"
   },
   "keywords": [],
   "author": "",
@@ -21,6 +22,7 @@
     "express": "^4.19.1",
     "jsonwebtoken": "^9.0.2",
     "multer": "1.4.5-lts.1",
+    "winston": "^3.13.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -34,6 +36,7 @@
     "@typescript-eslint/parser": "^7.3.1",
     "eslint": "^8.57.0",
     "eslint-plugin-import": "^2.29.1",
+    "husky": "^9.0.11",
     "nodemon": "^3.1.0",
     "prisma": "^5.11.0",
     "ts-node": "^10.9.2",

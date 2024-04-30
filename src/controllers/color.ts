@@ -5,6 +5,7 @@ import OptionService from "../services/option";
 import PlanterService from "../services/planter";
 import ColorService from "../services/color";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class ColorController {
   private productService: ProductService;
@@ -62,7 +63,7 @@ export class ColorController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -129,7 +130,7 @@ export class ColorController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -182,7 +183,7 @@ export class ColorController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -226,7 +227,7 @@ export class ColorController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

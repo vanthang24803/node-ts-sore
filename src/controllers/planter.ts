@@ -4,6 +4,7 @@ import ProductService from "../services/product";
 import OptionService from "../services/option";
 import PlanterService from "../services/planter";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class PlanterController {
   private productService: ProductService;
@@ -46,7 +47,7 @@ export class PlanterController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -92,7 +93,7 @@ export class PlanterController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -136,7 +137,7 @@ export class PlanterController {
       }
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -170,7 +171,7 @@ export class PlanterController {
       }
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

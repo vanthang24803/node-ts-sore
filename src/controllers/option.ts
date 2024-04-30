@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import ProductService from "../services/product";
 import OptionService from "../services/option";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class OptionController {
   private productService: ProductService;
@@ -26,7 +27,7 @@ export class OptionController {
 
       return Http.Created(res, result);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -53,7 +54,7 @@ export class OptionController {
 
       return Http.Ok(res, result);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -71,7 +72,7 @@ export class OptionController {
       const result = await this.optionService.findAll(id);
       return Http.Ok(res, result);
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -96,7 +97,7 @@ export class OptionController {
 
       return Http.BadRequest(res, "Option not found!");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -123,7 +124,7 @@ export class OptionController {
 
       return Http.Ok(res, "Option deleted successfully!");
     } catch (error) {
-      console.error(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

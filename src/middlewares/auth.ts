@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
 
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 const secret = process.env.SECRET;
 
@@ -17,7 +18,7 @@ export const verifyAuth = (req: Request, res: Response, next: NextFunction) => {
     jwt.verify(token, secret!);
     next();
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     return Http.Forbidden(res);
   }
 };

@@ -3,6 +3,7 @@ import AuthService from "../services/auth";
 import TokenService from "../services/token";
 import ProfileService from "../services/profile";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class AuthController {
   private authService: AuthService;
@@ -21,7 +22,7 @@ export class AuthController {
 
       return Http.Created(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -36,7 +37,7 @@ export class AuthController {
 
       return Http.Unauthorized(res);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -53,7 +54,7 @@ export class AuthController {
 
       return Http.Unauthorized(res);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -75,11 +76,11 @@ export class AuthController {
 
         return Http.Unauthorized(res);
       } catch (error) {
-        console.log(error);
+        logger.error(error);
         return Http.Forbidden(res);
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

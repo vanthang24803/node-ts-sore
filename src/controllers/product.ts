@@ -3,6 +3,8 @@ import { Product, UpdateProduct } from "../models/product";
 import ProductService from "../services/product";
 import CategoryService from "../services/category";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
+
 
 export class ProductController {
   private services: ProductService;
@@ -30,7 +32,7 @@ export class ProductController {
 
       return Http.Created(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -45,7 +47,7 @@ export class ProductController {
 
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -57,7 +59,7 @@ export class ProductController {
       const result = await this.services.search(q as string);
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -74,7 +76,7 @@ export class ProductController {
 
       return Http.NotFound(res, "Product not found");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -94,7 +96,7 @@ export class ProductController {
 
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -113,7 +115,7 @@ export class ProductController {
 
       return Http.Ok(res, "Product deleted successfully!");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

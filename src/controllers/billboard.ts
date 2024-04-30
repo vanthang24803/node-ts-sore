@@ -6,6 +6,7 @@ import CategoryService from "../services/category";
 import { Billboard } from "../models/billboard";
 
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class BillboardController {
   private billboardService: BillboardService;
@@ -36,7 +37,7 @@ export class BillboardController {
 
       return Http.Created(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -47,7 +48,7 @@ export class BillboardController {
 
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -67,7 +68,7 @@ export class BillboardController {
 
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -88,7 +89,7 @@ export class BillboardController {
         return Http.Ok(res, result);
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -107,7 +108,7 @@ export class BillboardController {
 
       return Http.Ok(res, "Billboard deleted successfully");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

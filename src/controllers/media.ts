@@ -3,6 +3,7 @@ import { Request, Response } from "express";
 import ProductService from "../services/product";
 import MediaService from "../services/media";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class MediaController {
   private productService: ProductService;
@@ -35,7 +36,7 @@ export class MediaController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -65,7 +66,7 @@ export class MediaController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -92,7 +93,7 @@ export class MediaController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

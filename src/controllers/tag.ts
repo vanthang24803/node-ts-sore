@@ -4,6 +4,7 @@ import ProductService from "../services/product";
 import TagService from "../services/tag";
 
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class TagController {
   private productService: ProductService;
@@ -37,7 +38,7 @@ export class TagController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -72,7 +73,7 @@ export class TagController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -113,7 +114,7 @@ export class TagController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -143,7 +144,7 @@ export class TagController {
 
       return Http.BadRequest(res, "Invalid Params");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };

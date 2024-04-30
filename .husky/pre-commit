@@ -1,0 +1,3 @@
+echo "Runing build"
+pnpm build
+

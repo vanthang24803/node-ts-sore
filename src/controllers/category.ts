@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import CategoryService from "../services/category";
 import { Http } from "../helpers/http";
+import { logger } from "../helpers/logger";
 
 export class CategoryController {
   private categoryService: CategoryService;
@@ -17,7 +18,7 @@ export class CategoryController {
 
       return Http.Created(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -27,7 +28,7 @@ export class CategoryController {
       const result = await this.categoryService.findAllCategory();
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -45,7 +46,7 @@ export class CategoryController {
       const result = await this.categoryService.updateCategory(id, name);
       return Http.Ok(res, result);
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
@@ -63,7 +64,7 @@ export class CategoryController {
 
       return Http.Ok(res, "Category deleted successfully!");
     } catch (error) {
-      console.log(error);
+      logger.error(error);
       return Http.ServerError(res);
     }
   };
