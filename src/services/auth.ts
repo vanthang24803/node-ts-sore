@@ -1,12 +1,12 @@
-import "dotenv/config";
-import bcrypt from "bcrypt";
-import { prisma } from "../lib/prisma";
+import 'dotenv/config';
+import bcrypt from 'bcrypt';
+import { prisma } from '@/lib/prisma';
 
-import { Login, Register, RegisterResponse } from "../models/auth";
-import IAuthService from "../repositories/auth";
+import { Login, Register, RegisterResponse } from '@/models/auth';
+import IAuthService from '@/repositories/auth';
 
-import JwtGenerator from "../helpers/jwt-generator";
-import TokenService from "./token";
+import JwtGenerator from '@/helpers/jwt-generator';
+import TokenService from '@/services/token';
 
 class AuthService implements IAuthService {
   private tokenService: TokenService;
@@ -46,7 +46,7 @@ class AuthService implements IAuthService {
     if (!exitingUser) {
       return {
         isSuccess: false,
-        message: "Email or password wrong",
+        message: 'Email or password wrong',
       };
     }
 
@@ -55,20 +55,20 @@ class AuthService implements IAuthService {
     if (!isSuccess) {
       return {
         isSuccess: false,
-        message: "Email or password wrong",
+        message: 'Email or password wrong',
       };
     }
 
     const accessToken = JwtGenerator.generateToken(
       { id: exitingUser.id },
       this.secret!,
-      "10m"
+      '10m'
     );
 
     const refreshToken = JwtGenerator.generateToken(
       { id: exitingUser.id },
       this.refresh!,
-      "30d"
+      '30d'
     );
 
     const token = await this.tokenService.generateToken(
@@ -76,8 +76,6 @@ class AuthService implements IAuthService {
       exitingUser.id
     );
 
-   
-  
     return { isSuccess: true, accessToken, refreshToken: token };
   }
 }

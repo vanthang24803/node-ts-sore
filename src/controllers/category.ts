@@ -1,7 +1,7 @@
-import { Request, Response } from "express";
-import CategoryService from "../services/category";
-import { Http } from "../helpers/http";
-import { logger } from "../helpers/logger";
+import { Request, Response } from 'express';
+import CategoryService from '@/services/category';
+import { Http } from '@/helpers/http';
+import { logger } from '@/helpers/logger';
 
 export class CategoryController {
   private categoryService: CategoryService;
@@ -40,7 +40,7 @@ export class CategoryController {
       const categoryExists = await this.categoryService.isExist(id);
 
       if (!categoryExists) {
-        return Http.NotFound(res, "Category not found!");
+        return Http.NotFound(res, 'Category not found!');
       }
 
       const result = await this.categoryService.updateCategory(id, name);
@@ -57,12 +57,12 @@ export class CategoryController {
       const categoryExists = await this.categoryService.isExist(id);
 
       if (!categoryExists) {
-        return Http.NotFound(res, "Category not found!");
+        return Http.NotFound(res, 'Category not found!');
       }
 
       await this.categoryService.deleteCategory(id);
 
-      return Http.Ok(res, "Category deleted successfully!");
+      return Http.Ok(res, 'Category deleted successfully!');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);

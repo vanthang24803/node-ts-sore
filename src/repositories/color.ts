@@ -1,4 +1,4 @@
-import { Color } from "../models/color";
+import { Color } from '@/models/color';
 
 export default interface IColorService {
   create: (planterId: string, data: Color) => Promise<unknown>;

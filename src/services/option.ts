@@ -1,7 +1,7 @@
-import { Size } from "@prisma/client";
-import { prisma } from "../lib/prisma";
-import { Option } from "../models/option";
-import IOptionService from "../repositories/option";
+import { Size } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { Option } from '@/models/option';
+import IOptionService from '@/repositories/option';
 
 class OptionService implements IOptionService {
   public async create(productId: string, data: Option) {
@@ -55,9 +55,9 @@ class OptionService implements IOptionService {
       where: {
         productId: productId,
       },
-      include : {
-        Planter : true,
-      }
+      include: {
+        Planter: true,
+      },
     });
 
     return result;

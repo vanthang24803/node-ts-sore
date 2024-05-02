@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import "dotenv/config";
-import JwtGenerator from "../helpers/jwt-generator";
-import { prisma } from "../lib/prisma";
-import IProfileService from "../repositories/profile";
+import 'dotenv/config';
+import JwtGenerator from '@/helpers/jwt-generator';
+import { prisma } from '@/lib/prisma';
+import IProfileService from '@/repositories/profile';
 
 class ProfileService implements IProfileService {
   private readonly secret = process.env.SECRET;

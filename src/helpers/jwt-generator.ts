@@ -1,4 +1,4 @@
-import jwt, { JwtPayload } from "jsonwebtoken";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 class JwtGenerator {
   static generateToken(data: object, secret: string, expires: string) {

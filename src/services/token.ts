@@ -1,8 +1,8 @@
-import "dotenv/config";
-import { prisma } from "../lib/prisma";
-import JwtGenerator from "../helpers/jwt-generator";
-import ITokenService from "../repositories/token";
-import { Token } from "../enum/token";
+import 'dotenv/config';
+import { prisma } from '@/lib/prisma';
+import JwtGenerator from '@/helpers/jwt-generator';
+import ITokenService from '@/repositories/token';
+import { Token } from '@/enum/token';
 
 class TokenService implements ITokenService {
   private readonly secret = process.env.SECRET;
@@ -64,7 +64,7 @@ class TokenService implements ITokenService {
     if (!existingToken || existingToken.expiryDate.getTime() < Date.now()) {
       return {
         isSuccess: false,
-        message: "Token expired",
+        message: 'Token expired',
       };
     }
 
@@ -79,7 +79,7 @@ class TokenService implements ITokenService {
     };
 
     JwtGenerator.verifyToken(token, this.refresh!);
-    const accessToken = JwtGenerator.generateToken(user, this.secret!, "5m");
+    const accessToken = JwtGenerator.generateToken(user, this.secret!, '5m');
 
     return {
       isSuccess: true,

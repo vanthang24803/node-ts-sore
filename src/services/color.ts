@@ -1,6 +1,6 @@
-import { prisma } from "../lib/prisma";
-import { Color } from "../models/color";
-import IColorService from "../repositories/color";
+import { prisma } from '@/lib/prisma';
+import { Color } from '@/models/color';
+import IColorService from '@/repositories/color';
 
 class ColorService implements IColorService {
   public async create(planterId: string, data: Color) {

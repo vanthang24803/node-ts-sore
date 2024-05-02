@@ -1,4 +1,4 @@
-import { Option } from "../models/option";
+import { Option } from '@/models/option';
 
 export default interface IOptionService {
   create: (productId: string, data: Option) => Promise<unknown>;

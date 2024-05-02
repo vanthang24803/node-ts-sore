@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { Size } from "@prisma/client";
-import { prisma } from "../lib/prisma";
-import { Product, UpdateProduct } from "../models/product";
-import IProductService from "../repositories/product";
-import UploadService from "./upload";
+import { Size } from '@prisma/client';
+import { prisma } from '@/lib/prisma';
+import { Product, UpdateProduct } from '@/models/product';
+import IProductService from '@/repositories/product';
+import UploadService from '@/services/upload';
 
 class ProductService implements IProductService {
   private uploadService: UploadService;
@@ -22,9 +22,9 @@ class ProductService implements IProductService {
       data: {
         name: data.name,
         rangePrice: data.rangePrice,
-        description: data.description || "",
+        description: data.description || '',
         thumbnail: imageUpload[0].url,
-        guide: data.guide || "",
+        guide: data.guide || '',
         options: {
           create: {
             name: data.optionName,
@@ -125,7 +125,7 @@ class ProductService implements IProductService {
       data: {
         name: data.name,
         description: data.description,
-        guide: data.guide || "",
+        guide: data.guide || '',
         rangePrice: data.rangePrice,
       },
     });

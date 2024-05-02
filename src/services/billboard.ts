@@ -1,7 +1,7 @@
-import { prisma } from "../lib/prisma";
-import { Billboard } from "../models/billboard";
-import IBillboardService from "../repositories/billboard";
-import UploadService from "./upload";
+import { prisma } from '@/lib/prisma';
+import { Billboard } from '@/models/billboard';
+import IBillboardService from '@/repositories/billboard';
+import UploadService from '@/services/upload';
 
 class BillboardService implements IBillboardService {
   private uploadService: UploadService;

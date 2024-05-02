@@ -1,10 +1,9 @@
-import { prisma } from "../lib/prisma";
-import IMediaService from "../repositories/media";
-import UploadService from "./upload";
-
+import { prisma } from '@/lib/prisma';
+import IMediaService from '@/repositories/media';
+import UploadService from '@/services/upload';
 
 class MediaService implements IMediaService {
-  private uploadService : UploadService;
+  private uploadService: UploadService;
 
   constructor() {
     this.uploadService = new UploadService();
@@ -48,12 +47,12 @@ class MediaService implements IMediaService {
 
       return {
         isSuccess: true,
-        message: "Image deleted success",
+        message: 'Image deleted success',
       };
     }
     return {
       isSuccess: false,
-      message: "Image not found",
+      message: 'Image not found',
     };
   }
 

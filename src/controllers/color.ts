@@ -1,11 +1,11 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import ProductService from "../services/product";
-import OptionService from "../services/option";
-import PlanterService from "../services/planter";
-import ColorService from "../services/color";
-import { Http } from "../helpers/http";
-import { logger } from "../helpers/logger";
+import ProductService from '@/services/product';
+import OptionService from '@/services/option';
+import PlanterService from '@/services/planter';
+import ColorService from '@/services/color';
+import { Http } from '@/helpers/http';
+import { logger } from '@/helpers/logger';
 
 export class ColorController {
   private productService: ProductService;
@@ -24,12 +24,11 @@ export class ColorController {
     try {
       const { productId, optionId } = req.params;
 
-      const existingProduct = await this.productService.isProductExist(
-        productId
-      );
+      const existingProduct =
+        await this.productService.isProductExist(productId);
 
       if (!existingProduct) {
-        return Http.NotFound(res, "Product not found!");
+        return Http.NotFound(res, 'Product not found!');
       }
 
       const existingOption = await this.optionService.isExist(
@@ -38,19 +37,19 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return Http.BadRequest(res, "Option not found!");
+        return Http.BadRequest(res, 'Option not found!');
       }
 
       const { method, planterId } = req.query;
 
-      if (method === "create" && planterId) {
+      if (method === 'create' && planterId) {
         const existingPlanter = await this.planterService.isExist(
           optionId,
           planterId as string
         );
 
         if (!existingPlanter) {
-          return Http.BadRequest(res, "Planter not found!");
+          return Http.BadRequest(res, 'Planter not found!');
         }
 
         const result = await this.colorService.create(
@@ -61,7 +60,7 @@ export class ColorController {
         return Http.Created(res, result);
       }
 
-      return Http.BadRequest(res, "Invalid Params");
+      return Http.BadRequest(res, 'Invalid Params');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);
@@ -72,12 +71,11 @@ export class ColorController {
     try {
       const { productId, optionId } = req.params;
 
-      const existingProduct = await this.productService.isProductExist(
-        productId
-      );
+      const existingProduct =
+        await this.productService.isProductExist(productId);
 
       if (!existingProduct) {
-        return Http.NotFound(res, "Product not found!");
+        return Http.NotFound(res, 'Product not found!');
       }
 
       const existingOption = await this.optionService.isExist(
@@ -86,19 +84,19 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return Http.BadRequest(res, "Option not found!");
+        return Http.BadRequest(res, 'Option not found!');
       }
 
       const { method, planterId, id } = req.query;
 
-      if (method === "all" && planterId) {
+      if (method === 'all' && planterId) {
         const existingPlanter = await this.planterService.isExist(
           optionId,
           planterId as string
         );
 
         if (!existingPlanter) {
-          return Http.BadRequest(res, "Planter not found!");
+          return Http.BadRequest(res, 'Planter not found!');
         }
 
         const result = await this.colorService.findAll(planterId as string);
@@ -106,14 +104,14 @@ export class ColorController {
         return Http.Ok(res, result);
       }
 
-      if (method === "detail" && planterId && id) {
+      if (method === 'detail' && planterId && id) {
         const existingPlanter = await this.planterService.isExist(
           optionId,
           planterId as string
         );
 
         if (!existingPlanter) {
-          return Http.BadRequest(res, "Planter not found!");
+          return Http.BadRequest(res, 'Planter not found!');
         }
 
         const result = await this.colorService.findById(
@@ -125,10 +123,10 @@ export class ColorController {
           return Http.Ok(res, result);
         }
 
-        return Http.NotFound(res, "Color not found!");
+        return Http.NotFound(res, 'Color not found!');
       }
 
-      return Http.BadRequest(res, "Invalid Params");
+      return Http.BadRequest(res, 'Invalid Params');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);
@@ -139,12 +137,11 @@ export class ColorController {
     try {
       const { productId, optionId } = req.params;
 
-      const existingProduct = await this.productService.isProductExist(
-        productId
-      );
+      const existingProduct =
+        await this.productService.isProductExist(productId);
 
       if (!existingProduct) {
-        return Http.NotFound(res, "Product not found!");
+        return Http.NotFound(res, 'Product not found!');
       }
 
       const existingOption = await this.optionService.isExist(
@@ -153,19 +150,19 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return Http.BadRequest(res, "Option not found!");
+        return Http.BadRequest(res, 'Option not found!');
       }
 
       const { method, planterId, id } = req.query;
 
-      if (method === "update" && planterId && id) {
+      if (method === 'update' && planterId && id) {
         const existingPlanter = await this.planterService.isExist(
           optionId,
           planterId as string
         );
 
         if (!existingPlanter) {
-          return Http.BadRequest(res, "Planter not found!");
+          return Http.BadRequest(res, 'Planter not found!');
         }
 
         const result = await this.colorService.update(
@@ -178,10 +175,10 @@ export class ColorController {
           return Http.Ok(res, result);
         }
 
-        return Http.NotFound(res, "Color not found!");
+        return Http.NotFound(res, 'Color not found!');
       }
 
-      return Http.BadRequest(res, "Invalid Params");
+      return Http.BadRequest(res, 'Invalid Params');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);
@@ -192,12 +189,11 @@ export class ColorController {
     try {
       const { productId, optionId } = req.params;
 
-      const existingProduct = await this.productService.isProductExist(
-        productId
-      );
+      const existingProduct =
+        await this.productService.isProductExist(productId);
 
       if (!existingProduct) {
-        return Http.NotFound(res, "Product not found!");
+        return Http.NotFound(res, 'Product not found!');
       }
 
       const existingOption = await this.optionService.isExist(
@@ -206,26 +202,26 @@ export class ColorController {
       );
 
       if (!existingOption) {
-        return Http.BadRequest(res, "Option not found!");
+        return Http.BadRequest(res, 'Option not found!');
       }
 
       const { method, planterId, id } = req.query;
 
-      if (method === "delete" && planterId && id) {
+      if (method === 'delete' && planterId && id) {
         const existingPlanter = await this.planterService.isExist(
           optionId,
           planterId as string
         );
 
         if (!existingPlanter) {
-          return Http.BadRequest(res, "Planter not found!");
+          return Http.BadRequest(res, 'Planter not found!');
         }
 
         await this.colorService.delete(planterId as string, id as string);
-        return Http.Ok(res, "Color deleted successfully!");
+        return Http.Ok(res, 'Color deleted successfully!');
       }
 
-      return Http.BadRequest(res, "Invalid Params");
+      return Http.BadRequest(res, 'Invalid Params');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);

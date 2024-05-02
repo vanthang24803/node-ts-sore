@@ -1,10 +1,9 @@
-import { Request, Response } from "express";
-import { Product, UpdateProduct } from "../models/product";
-import ProductService from "../services/product";
-import CategoryService from "../services/category";
-import { Http } from "../helpers/http";
-import { logger } from "../helpers/logger";
-
+import { Request, Response } from 'express';
+import { Product, UpdateProduct } from '@/models/product';
+import ProductService from '@/services/product';
+import CategoryService from '@/services/category';
+import { Http } from '@/helpers/http';
+import { logger } from '@/helpers/logger';
 
 export class ProductController {
   private services: ProductService;
@@ -25,7 +24,7 @@ export class ProductController {
       );
 
       if (!exitingCategory) {
-        return Http.NotFound(res, "Category not found");
+        return Http.NotFound(res, 'Category not found');
       }
 
       const result = await this.services.createProductAsync(images, data);
@@ -74,7 +73,7 @@ export class ProductController {
         return Http.Ok(res, result);
       }
 
-      return Http.NotFound(res, "Product not found");
+      return Http.NotFound(res, 'Product not found');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);
@@ -89,7 +88,7 @@ export class ProductController {
       const exitingProduct = await this.services.isProductExist(id);
 
       if (!exitingProduct) {
-        return Http.NotFound(res, "Product not found!");
+        return Http.NotFound(res, 'Product not found!');
       }
 
       const result = await this.services.updateProductAsync(id, body);
@@ -108,12 +107,12 @@ export class ProductController {
       const exitingProduct = await this.services.isProductExist(id);
 
       if (!exitingProduct) {
-        return Http.NotFound(res, "Product not found!");
+        return Http.NotFound(res, 'Product not found!');
       }
 
       await this.services.deleteProductAsync(id);
 
-      return Http.Ok(res, "Product deleted successfully!");
+      return Http.Ok(res, 'Product deleted successfully!');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);

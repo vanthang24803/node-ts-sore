@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import ICategoryService from "../repositories/category";
+import { prisma } from '@/lib/prisma';
+import ICategoryService from '@/repositories/category';
 
 class CategoryService implements ICategoryService {
   public async createCategory(name: string) {

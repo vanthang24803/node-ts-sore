@@ -1,4 +1,4 @@
-version: "3.8"
+version: '3.8'
 services:
   app:
     build:
@@ -7,7 +7,7 @@ services:
     volumes:
       - .:/app
     ports:
-      - "8080:8080"
+      - '8080:8080'
     command: npm run dev
     depends_on:
       - db
@@ -18,4 +18,4 @@ services:
       POSTGRES_PASSWORD: password
       POSTGRES_DB: gis
     ports:
-      - "5433:5432"
+      - '5433:5432'

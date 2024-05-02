@@ -1,4 +1,4 @@
-import { Billboard } from "../models/billboard";
+import { Billboard } from '@/models/billboard';
 
 interface IBillboardService {
   createBillboardAsync: (

@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { Status } from "../enum/status";
+import { Response } from 'express';
+import { Status } from '@/enum/status';
 
 export class Http {
   public static Ok(res: Response, response: object | string) {
@@ -30,21 +30,21 @@ export class Http {
   public static Unauthorized(res: Response) {
     return res.status(Status.Unauthorized).json({
       status: Status.Unauthorized,
-      message: "Unauthorized",
+      message: 'Unauthorized',
     });
   }
 
   public static Forbidden(res: Response) {
     return res.status(Status.Forbidden).json({
       status: Status.Forbidden,
-      message: "Forbidden",
+      message: 'Forbidden',
     });
   }
 
   public static ServerError(res: Response) {
     return res.status(Status.ServerError).json({
       status: Status.ServerError,
-      message: "Internal Server Error",
+      message: 'Internal Server Error',
     });
   }
 }

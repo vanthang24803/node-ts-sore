@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import IPlanterService from "../repositories/planter";
+import { prisma } from '@/lib/prisma';
+import IPlanterService from '@/repositories/planter';
 
 class PlanterService implements IPlanterService {
   public async create(optionId: string, name: string) {

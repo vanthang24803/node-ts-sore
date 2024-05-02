@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import AuthService from "../services/auth";
-import TokenService from "../services/token";
-import ProfileService from "../services/profile";
-import { Http } from "../helpers/http";
-import { logger } from "../helpers/logger";
+import { Request, Response } from 'express';
+import AuthService from '@/services/auth';
+import TokenService from '@/services/token';
+import ProfileService from '@/services/profile';
+import { Http } from '@/helpers/http';
+import { logger } from '@/helpers/logger';
 
 export class AuthController {
   private authService: AuthService;
@@ -61,8 +61,8 @@ export class AuthController {
 
   public profile = async (req: Request, res: Response) => {
     try {
-      const header = req.headers["authorization"];
-      const token = header && header.split(" ")[1];
+      const header = req.headers['authorization'];
+      const token = header && header.split(' ')[1];
 
       if (!token) {
         return Http.Unauthorized(res);

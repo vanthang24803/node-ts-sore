@@ -1,4 +1,4 @@
-import { Product, UpdateProduct } from "../models/product";
+import { Product, UpdateProduct } from '@/models/product';
 
 interface IProductService {
   createProductAsync(

@@ -1,12 +1,12 @@
-import { Request, Response } from "express";
+import { Request, Response } from 'express';
 
-import BillboardService from "../services/billboard";
-import CategoryService from "../services/category";
+import BillboardService from '@/services/billboard';
+import CategoryService from '@/services/category';
 
-import { Billboard } from "../models/billboard";
+import { Billboard } from '@/models/billboard';
 
-import { Http } from "../helpers/http";
-import { logger } from "../helpers/logger";
+import { Http } from '@/helpers/http';
+import { logger } from '@/helpers/logger';
 
 export class BillboardController {
   private billboardService: BillboardService;
@@ -27,7 +27,7 @@ export class BillboardController {
       );
 
       if (!isCategoryExist) {
-        return Http.NotFound(res, "Billboard notfound!");
+        return Http.NotFound(res, 'Billboard notfound!');
       }
 
       const result = await this.billboardService.createBillboardAsync(
@@ -61,7 +61,7 @@ export class BillboardController {
         await this.billboardService.isBillboardExistAsync(id);
 
       if (!isBillboardExist) {
-        return Http.NotFound(res, "Billboard notfound!");
+        return Http.NotFound(res, 'Billboard notfound!');
       }
 
       const result = await this.billboardService.updateBillboardAsync(id, body);
@@ -80,7 +80,7 @@ export class BillboardController {
         await this.billboardService.isBillboardExistAsync(id);
 
       if (!isBillboardExist) {
-        return Http.NotFound(res, "Billboard notfound!");
+        return Http.NotFound(res, 'Billboard notfound!');
       }
 
       const result = await this.billboardService.findBillboardDetailAsync(id);
@@ -101,12 +101,12 @@ export class BillboardController {
         await this.billboardService.isBillboardExistAsync(id);
 
       if (!isBillboardExist) {
-        return Http.NotFound(res, "Billboard notfound!");
+        return Http.NotFound(res, 'Billboard notfound!');
       }
 
       await this.billboardService.deleteBillboardAsync(id);
 
-      return Http.Ok(res, "Billboard deleted successfully");
+      return Http.Ok(res, 'Billboard deleted successfully');
     } catch (error) {
       logger.error(error);
       return Http.ServerError(res);

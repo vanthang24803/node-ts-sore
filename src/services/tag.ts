@@ -1,5 +1,5 @@
-import { prisma } from "../lib/prisma";
-import ITagService from "../repositories/tag";
+import { prisma } from '@/lib/prisma';
+import ITagService from '@/repositories/tag';
 
 class TagService implements ITagService {
   public async create(productId: string, name: string) {

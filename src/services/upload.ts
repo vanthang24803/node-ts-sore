@@ -1,5 +1,5 @@
-import cloudinary from "../configs/cloudinary";
-import IUploadService from "../repositories/upload";
+import cloudinary from '@/configs/cloudinary';
+import IUploadService from '@/repositories/upload';
 
 class UploadService implements IUploadService {
   public async upload(files: Express.Multer.File[] | undefined) {
@@ -23,7 +23,7 @@ class UploadService implements IUploadService {
   public async delete(publicId: string) {
     const result = await cloudinary.uploader.destroy(publicId);
 
-    return result.result === "ok";
+    return result.result === 'ok';
   }
 }
 

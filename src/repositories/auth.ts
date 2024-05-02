@@ -1,4 +1,4 @@
-import { Login, Register } from "../models/auth";
+import { Login, Register } from '@/models/auth';
 
 interface IAuthService {
   register: (data: Register) => Promise<object>;

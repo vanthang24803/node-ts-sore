@@ -1,4 +1,4 @@
-import * as z from "zod";
+import * as z from 'zod';
 
 const ProductSchema = z.object({
   name: z.string().min(1),
@@ -21,13 +21,7 @@ const UpdateProductSchema = z.object({
   guide: z.string().min(1).optional(),
 });
 
-
 type Product = z.infer<typeof ProductSchema>;
 type UpdateProduct = z.infer<typeof UpdateProductSchema>;
 
-export {
-  ProductSchema,
-  UpdateProductSchema,
-  Product,
-  UpdateProduct,
-};
+export { ProductSchema, UpdateProductSchema, Product, UpdateProduct };

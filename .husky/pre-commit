@@ -1,4 +1,5 @@
 echo "Runing build application 💀💀💀💀💀"
 pnpm build
+npx prettier --write "src/**/*.ts"
 
 echo "Application build sucess 👏👏👏👏👏"
