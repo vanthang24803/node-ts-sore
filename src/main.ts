@@ -3,6 +3,7 @@ import express, { Request, Response } from 'express';
 import 'dotenv/config';
 import router from '@/routes';
 import cors from 'cors';
+import morgan from 'morgan';
 import { Connection } from '@/lib/prisma';
 
 const app: express.Application = express();
@@ -11,6 +12,9 @@ const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 app.use('/api/v1', router);
+app.use(
+  morgan(':method :url :status :res[content-length] - :response-time ms')
+);
 
 const PORT: string | number = process.env.PORT || 3000;
 
